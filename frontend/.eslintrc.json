@@ -1,0 +1,10 @@
+{
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "no-console": "error",
+    "prefer-arrow-callback": "warn",
+    "indent": ["error", 2],
+    "prefer-const": "error",
+    "no-unused-vars": "warn"
+  }
+}
