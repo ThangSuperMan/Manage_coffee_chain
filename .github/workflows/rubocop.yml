@@ -6,13 +6,12 @@ jobs:
   builds:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
         ruby: [3.0]
 
     steps:
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
