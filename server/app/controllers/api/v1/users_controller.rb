@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < Api::V1::BaseController
-      skip_before_action :doorkeeper_authorize!, only: %i[create]
+      before_action :doorkeeper_authorize!, except: [:create]
 
       def create
         user = User.new(email: user_params[:email], password: user_params[:password])
@@ -13,7 +13,7 @@ module Api
           access_token = Doorkeeper::AccessToken.create(
             resource_owner_id: user.id,
             application_id: client_app.id,
-            refresh_token: gerenate_refresh_token,
+            refresh_token: generatate_refresh_token,
             expires_in: Doorkeeper.configuration.access_token_expires_in.to_i,
             scopes: ''
           )
@@ -28,12 +28,14 @@ module Api
               refresh_token: access_token.refresh_token,
               created_at: access_token.created_at
             }})
+        else
+          render(json: { error: user.errors.full_messages }, status: 422)
         end
       end
 
       private
-      
-      def user_parmas
+
+      def user_params
         params.permit(:email, :password)
       end
 

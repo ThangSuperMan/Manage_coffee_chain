@@ -1,14 +1,13 @@
 Rails.application.routes.draw do
-  use_doorkeeper do
-    skip_controllers :authorizations, :application, :authorized_applications
-  end
+  mount Coverband::Reporters::Web.new, at: '/coverage'
 
+  use_doorkeeper
   devise_for :users
 
-  root 'bookmarks#index'
   namespace :api do
     namespace :v1 do
-      resources :bookmarks
+      resources :users, only: [:create]
+      resources :bookmarks, only: [:index, :show]
     end
   end
 end

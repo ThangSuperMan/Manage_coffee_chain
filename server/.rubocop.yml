@@ -1,0 +1,20 @@
+AllCops:
+  TargetRubyVersion: 3.0.6
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: true
+
+Naming/MethodName:
+  Enabled: true
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 99
