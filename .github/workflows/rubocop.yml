@@ -17,8 +17,10 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.0.6"
+          ruby-version: "3.0"
           bundler-cache: true
+        working-directory: ./server
 
       - name: Run RuboCop
         run: bundle exec rubocop
+        working-directory: ./server
