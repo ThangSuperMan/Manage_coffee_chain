@@ -14,12 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.0"
-          bundler-cache: true
-        working-directory: ./server
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "3.0"
+        bundler-cache: true
+
+    - name: Install dependencies
+      working-directory: ./server
+      run: |
+        gem install bundler
+        bundle install
 
       - name: Run RuboCop
         run: bundle exec rubocop
