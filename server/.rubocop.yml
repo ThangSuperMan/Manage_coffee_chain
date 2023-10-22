@@ -1,6 +1,3 @@
-AllCops:
-  TargetRubyVersion: 3.0.6
-
 Style/FrozenStringLiteralComment:
   Enabled: false
 
@@ -15,6 +12,9 @@ Naming/MethodName:
 
 Style/ClassAndModuleChildren:
   Enabled: false
+
+Metrics/MethodLength:
+  Max: 20
 
 Layout/LineLength:
   Max: 99

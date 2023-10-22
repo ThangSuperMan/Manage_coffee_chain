@@ -1,0 +1,43 @@
+type Artist {
+  createdAt: ISO8601DateTime!
+  email: String
+  firstName: String
+  id: ID!
+  lastName: String!
+  updatedAt: ISO8601DateTime!
+}
+
+"""
+An ISO 8601-encoded datetime
+"""
+scalar ISO8601DateTime @specifiedBy(url: "https://tools.ietf.org/html/rfc3339")
+
+type Item {
+  artist: Artist!
+  artistId: ID!
+  createdAt: ISO8601DateTime!
+  description: String!
+  id: ID!
+  imageUrl: String!
+  title: String
+  updatedAt: ISO8601DateTime!
+}
+
+type Mutation {
+  """
+  An example field added by the generator
+  """
+  testField: String!
+}
+
+type Query {
+  """
+  Return a list of artists
+  """
+  artists: [Artist!]!
+
+  """
+  Return a list of items
+  """
+  items: [Item!]!
+}

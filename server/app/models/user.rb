@@ -4,7 +4,12 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  has_many :stores
+  has_many :user_cookie_consent_references, dependent: :delete_all
+
   validates :email, format: URI::MailTo::EMAIL_REGEXP
+
+  enum role: %i(user superadmin cashier)
 
   def self.authenticate(email, password)
     user = User.find_for_authentication(email: email)

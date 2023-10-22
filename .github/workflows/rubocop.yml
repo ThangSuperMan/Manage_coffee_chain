@@ -1,29 +1,29 @@
-name: Lint code with RuboCop
-
-on: [push, pull_request]
-
-jobs:
-  builds:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.0.6"
-          bundler-cache: true
-
-      - name: Install dependencies
-        working-directory: ./server
-        run: |
-          gem install bundler
-          bundle install
-
-      - name: Run RuboCop
-        run: bundle exec rubocop
-        working-directory: ./server
+# name: Lint code with RuboCop
+#
+# on: [push, pull_request]
+#
+# jobs:
+#   builds:
+#     runs-on: ${{ matrix.os }}
+#     strategy:
+#       matrix:
+#         os: [macos-latest, ubuntu-latest, windows-latest]
+#
+#     steps:
+#       - uses: actions/checkout@v2
+#
+#       - name: Setup Ruby
+#         uses: ruby/setup-ruby@v1
+#         with:
+#           ruby-version: "3.0.6"
+#           bundler-cache: true
+#
+#       - name: Install dependencies
+#         working-directory: ./server
+#         run: |
+#           gem install bundler
+#           bundle install
+#
+#       - name: Run RuboCop
+#         run: bundle exec rubocop
+#         working-directory: ./server

@@ -1,22 +1,21 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react'
-import Navbar from '@/components/Navbar'
-import Sidebar from '@/components/Sidebar'
+import Sidebar from '@/components/Sidebar';
+import { Box, useColorModeValue } from '@chakra-ui/react';
 
 interface Props {
-  children: React.ReactElement;
+  children: React.ReactNode;
+  route?: string;
 }
 
 const Layout: React.FC<Props> = ({ children }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-
   return (
-    <div className="min-h-screen">
-      <Navbar onMenuButtonClick={() => setSidebarOpen((prev) => !prev)} />
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
-      {children}
-    </div>
+    <>
+      <Sidebar />
+      <Box ml={{ base: 0, md: 60 }} minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
+        {children}
+      </Box>
+    </>
   );
 };
 
