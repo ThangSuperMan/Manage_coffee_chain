@@ -50,7 +50,7 @@ interface IBlogTags {
   marginTop?: SpaceProps['marginTop'];
 }
 
-const BlogTags = (props: Props) => {
+const BlogTags = (props: IBlogTags) => {
   const { marginTop = 0, tags } = props;
 
   return (
