@@ -22,9 +22,6 @@ const query = gql`
 
 export default async function Home() {
   const { data, loading } = await getClient().query({ query });
-  console.log('data: ', data);
-  console.log('loading: ', loading);
-
   // useEffect(() => {
   //   fetch('https://jsonplaceholder.typicode.com/posts')
   //     .then((res) => res.json())

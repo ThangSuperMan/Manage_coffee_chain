@@ -115,11 +115,10 @@ const ProductsPage: React.FC<Props> = () => {
   });
 
   const getCategoryNameBasedOnSlug = (slug: string): string => {
-    console.log('getCategoryNameBasedOnSlug  executed');
     categories.forEach((category: any) => {
       if (category.slug === slug) {
         const result = category.name;
-        console.log('result: ', result);
+
         return result;
       }
     });

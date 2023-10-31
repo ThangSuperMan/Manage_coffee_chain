@@ -23,7 +23,6 @@ const BlogsPage: React.FC = () => {
 
   useEffect(() => {
     if (response) {
-      console.log('response: ', response);
     }
   }, []);
 

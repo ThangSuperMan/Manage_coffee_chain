@@ -140,9 +140,7 @@ const BlogArticles: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log('Loaded in BlogArticles compo');
     if (response) {
-      console.log(response);
       const blogArticles = response.data.map((blog: any) => {
         return {
           title: blog.title.rendered,
@@ -150,8 +148,6 @@ const BlogArticles: React.FC = () => {
           paragraphs: getParagraphsBasedOnHTML(blog.content.rendered),
         };
       });
-
-      console.log('blogArticles: ', blogArticles);
 
       setBlogs(blogArticles);
     }

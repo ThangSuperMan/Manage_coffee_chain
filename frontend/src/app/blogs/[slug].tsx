@@ -29,7 +29,6 @@ const BlogDetailPage: React.FC = () => {
 
   useEffect(() => {
     if (response) {
-      console.log('response: ', response);
     }
   }, []);
 
