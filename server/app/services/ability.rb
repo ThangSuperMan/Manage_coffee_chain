@@ -13,6 +13,10 @@ class Ability
   end
 
   def allow_anonymous_actions
+    can :read, [
+      Product,
+    ]
+
     can :create, User do |user|
       user.user?
     end

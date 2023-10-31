@@ -17,6 +17,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import Link from 'next/link';
 
 const PublicNavbar: React.FC = () => {
   const { isOpen, onToggle } = useDisclosure();
@@ -58,7 +59,7 @@ const PublicNavbar: React.FC = () => {
 
         <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
           <Button as={'a'} fontSize={'sm'} fontWeight={400} variant={'link'} href={'#'}>
-            Sign In
+            Đăng nhập
           </Button>
           <Button
             as={'a'}
@@ -72,7 +73,7 @@ const PublicNavbar: React.FC = () => {
               bg: 'pink.300',
             }}
           >
-            Sign Up
+            Đăng ký
           </Button>
         </Stack>
       </Flex>
@@ -230,41 +231,37 @@ interface NavItem {
 
 const NAV_ITEMS: Array<NavItem> = [
   {
-    label: 'Inspiration',
+    label: 'Cảm hứng',
     children: [
       {
-        label: 'Explore Design Work',
-        subLabel: 'Trending Design to inspire you',
+        label: 'Khám phá Thiết kế Cửa hàng cà phê',
+        subLabel: 'Thiết kế đang thịnh hành để truyền cảm hứng cho bạn',
         href: '#',
       },
       {
-        label: 'New & Noteworthy',
-        subLabel: 'Up-and-coming Designers',
+        label: 'Mới & Đáng chú ý',
+        subLabel: 'Những nhà thiết kế mới nổi',
         href: '#',
       },
     ],
   },
   {
-    label: 'Find Work',
+    label: 'Tìm Việc',
     children: [
       {
-        label: 'Job Board',
-        subLabel: 'Find your dream design job',
+        label: 'Bảng việc làm',
+        subLabel: 'Tìm công việc thiết kế cửa hàng cà phê mơ ước của bạn',
         href: '#',
       },
       {
-        label: 'Freelance Projects',
-        subLabel: 'An exclusive list for contract work',
+        label: 'Dự án làm Freelance',
+        subLabel: 'Danh sách độc quyền cho công việc hợp đồng',
         href: '#',
       },
     ],
   },
   {
-    label: 'Learn Design',
-    href: '#',
-  },
-  {
-    label: 'Hire Designers',
+    label: 'Học pha chế',
     href: '#',
   },
 ];

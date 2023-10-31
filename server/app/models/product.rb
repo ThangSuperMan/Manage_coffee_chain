@@ -8,6 +8,7 @@ class Product < ApplicationRecord
   has_many :sizes, through: :product_sizes
   has_many :product_categories
   has_many :categories, through: :product_categories
+  has_many :toppings
 
   validates :start_at, presence: true
   validates :end_at, presence: true

@@ -28,7 +28,7 @@ module ApiException
             exception_name = "ApiException::#{exception_name}"
           end
 
-          rescue_from exception_name do |exeption|
+          rescue_from exception_name do |exception|
             render json: {
               message: context[:message],
               detail: exception.message

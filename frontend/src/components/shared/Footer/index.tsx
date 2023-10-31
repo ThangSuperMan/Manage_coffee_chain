@@ -32,66 +32,66 @@ const Footer: React.FC = () => {
       <Container as={Stack} maxW={'6xl'} py={10}>
         <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={8}>
           <Stack align={'flex-start'}>
-            <ListHeader>Product</ListHeader>
+            <ListHeader>Sản phẩm</ListHeader>
             <Box as="a" href={'#'}>
-              Overview
+              Tổng quan
             </Box>
             <Stack direction={'row'} align={'center'} spacing={2}>
               <Box as="a" href={'#'}>
-                Features
+                Tính năng
               </Box>
               <Tag size={'sm'} bg={useColorModeValue('green.300', 'green.800')} ml={2} color={'white'}>
-                New
+                Mới
               </Tag>
             </Stack>
             <Box as="a" href={'#'}>
-              Tutorials
+              Hướng dẫn
             </Box>
             <Box as="a" href={'#'}>
-              Pricing
+              Giá cả
             </Box>
             <Box as="a" href={'#'}>
-              Releases
+              Phiên bản
             </Box>
           </Stack>
           <Stack align={'flex-start'}>
-            <ListHeader>Company</ListHeader>
+            <ListHeader>Công ty</ListHeader>
             <Box as="a" href={'#'}>
-              About Us
+              Về chúng tôi
             </Box>
             <Box as="a" href={'#'}>
-              Press
+              Báo chí
             </Box>
             <Box as="a" href={'#'}>
-              Careers
+              Cơ hội nghề nghiệp
             </Box>
             <Box as="a" href={'#'}>
-              Contact Us
+              Liên hệ
             </Box>
             <Box as="a" href={'#'}>
-              Partners
-            </Box>
-          </Stack>
-          <Stack align={'flex-start'}>
-            <ListHeader>Legal</ListHeader>
-            <Box as="a" href={'#'}>
-              Cookies Policy
-            </Box>
-            <Box as="a" href={'#'}>
-              Privacy Policy
-            </Box>
-            <Box as="a" href={'#'}>
-              Terms of Service
-            </Box>
-            <Box as="a" href={'#'}>
-              Law Enforcement
-            </Box>
-            <Box as="a" href={'#'}>
-              Status
+              Đối tác
             </Box>
           </Stack>
           <Stack align={'flex-start'}>
-            <ListHeader>Follow Us</ListHeader>
+            <ListHeader>Pháp lý</ListHeader>
+            <Box as="a" href={'#'}>
+              Chính sách Cookie
+            </Box>
+            <Box as="a" href={'#'}>
+              Chính sách bảo mật
+            </Box>
+            <Box as="a" href={'#'}>
+              Điều khoản dịch vụ
+            </Box>
+            <Box as="a" href={'#'}>
+              Luật pháp
+            </Box>
+            <Box as="a" href={'#'}>
+              Trạng thái
+            </Box>
+          </Stack>
+          <Stack align={'flex-start'}>
+            <ListHeader>Theo dõi chúng tôi</ListHeader>
             <Box as="a" href={'#'}>
               Facebook
             </Box>
@@ -131,7 +131,7 @@ const Footer: React.FC = () => {
           <Logo />
         </Flex>
         <Text pt={6} fontSize={'sm'} textAlign={'center'}>
-          © 2022 Chakra Templates. All rights reserved
+          © 2022 Chakra Templates. Bảo lưu mọi quyền.
         </Text>
       </Box>
     </Box>

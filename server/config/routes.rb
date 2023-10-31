@@ -13,7 +13,16 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :user, only: [:create]
       resources :bookmarks, only: [:index, :show]
-      resources :products, only: [:index, :show]
+      resources :products, only: [:show], param: :slug
+      resources :category, only: [:index]
+
+      resources :categories do
+        resources :products, only: [:index]
+      end
+
+      resources :subcategories do
+        resources :products, only: [:index]
+      end
     end
   end
 end
