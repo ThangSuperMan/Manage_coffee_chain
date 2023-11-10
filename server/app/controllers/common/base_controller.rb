@@ -9,6 +9,7 @@ module Common
       user = Doorkeeper::AccessToken.find_by(
         token: request.headers['Authorization']&.split(' ')&.last
       )
+
       user.present? && @current_user = User.find(user.resource_owner_id)
     end
   end

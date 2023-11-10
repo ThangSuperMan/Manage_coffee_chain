@@ -58,7 +58,7 @@ const PublicNavbar: React.FC = () => {
         </Flex>
 
         <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-          <Button as={'a'} fontSize={'sm'} fontWeight={400} variant={'link'} href={'#'}>
+          <Button as={'a'} fontSize={'sm'} fontWeight={400} variant={'link'} href={'/signin'}>
             Đăng nhập
           </Button>
           <Button
@@ -67,10 +67,10 @@ const PublicNavbar: React.FC = () => {
             fontSize={'sm'}
             fontWeight={600}
             color={'white'}
-            bg={'pink.400'}
-            href={'#'}
+            bg={'primary'}
+            href={'/signup'}
             _hover={{
-              bg: 'pink.300',
+              bg: 'orange.500',
             }}
           >
             Đăng ký

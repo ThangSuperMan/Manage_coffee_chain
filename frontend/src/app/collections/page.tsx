@@ -6,11 +6,12 @@ import Category from '@/components/public/Category';
 import { Box, Flex, Center, Text } from '@chakra-ui/react';
 import QuillWrapper from '@/components/private/QuillWrapper';
 import Product from '@/types/product';
+import { httpMethods } from '@/constants';
 
 const ColletionsPage: React.FC = () => {
   const [content, setContent] = useState();
   const { response, loading, error } = useAxios({
-    method: 'GET',
+    method: httpMethods.GET,
     url: '/api/v1/products',
     headers: {
       'Content-Type': 'application/json',
@@ -30,8 +31,7 @@ const ColletionsPage: React.FC = () => {
   return (
     <main>
       <Center marginTop="6">
-        <Flex width="1200px">
-        </Flex>
+        <Flex width="1200px"></Flex>
       </Center>
       <Box maxWidth="600px" height="400px">
         <QuillWrapper onChange={handleOnChange} theme="snow" />

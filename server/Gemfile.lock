@@ -87,6 +87,7 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    diff-lcs (1.5.0)
     doorkeeper (5.4.0)
       railties (>= 5)
     dotenv (2.8.1)
@@ -233,6 +234,28 @@ GEM
       railties (>= 5.2)
     rexml (3.2.6)
     rollbar (3.4.0)
+    rspec-core (3.12.2)
+      rspec-support (~> 3.12.0)
+    rspec-expectations (3.12.3)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.12.0)
+    rspec-mocks (3.12.6)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.12.0)
+    rspec-rails (6.0.3)
+      actionpack (>= 6.1)
+      activesupport (>= 6.1)
+      railties (>= 6.1)
+      rspec-core (~> 3.12)
+      rspec-expectations (~> 3.12)
+      rspec-mocks (~> 3.12)
+      rspec-support (~> 3.12)
+    rspec-support (3.12.1)
+    rswag-api (2.11.0)
+      railties (>= 3.1, < 7.2)
+    rswag-ui (2.11.0)
+      actionpack (>= 3.1, < 7.2)
+      railties (>= 3.1, < 7.2)
     rubocop (0.90.0)
       parallel (~> 1.10)
       parser (>= 2.7.1.1)
@@ -298,6 +321,9 @@ DEPENDENCIES
   rack-cors
   rails (~> 6.1.7, >= 6.1.7.6)
   rollbar
+  rspec-rails
+  rswag-api
+  rswag-ui
   rubocop (~> 0.90.0)
   rubocop-performance (~> 1.8.1)
   rubocop-rails (~> 2.8.1)

@@ -1,64 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import useAxios from '@/hooks/useAxios';
-import { constants } from '@/constants';
-import {
-  Box,
-  Container,
-  Divider,
-  HStack,
-  Heading,
-  Image,
-  Text,
-  Tag,
-  Wrap,
-  WrapItem,
-  SpaceProps,
-  VStack,
-} from '@chakra-ui/react';
+import { constants, httpMethods } from '@/constants';
+import { Box, Container, Divider, HStack, Heading, Image, Text, Tag, Wrap, WrapItem, Center } from '@chakra-ui/react';
 import cheerio from 'cheerio';
+import axios from 'axios';
 
-const httpMethods = {
-  GET: 'GET',
-  POST: 'POST',
-  PUT: 'PUT',
-  PATCH: 'PATCH',
-};
-
-interface BlogAuthorProps {
-  date: Date;
-  name: string;
+interface BlogTagsProps {
+  tags: any[];
 }
 
-const BlogAuthor = (props: BlogAuthorProps) => {
-  return (
-    <HStack marginTop="2" spacing="2" display="flex" alignItems="center">
-      <Image
-        borderRadius="full"
-        boxSize="40px"
-        src="https://100k-faces.glitch.me/random-image"
-        alt={`Avatar of ${props.name}`}
-      />
-      <Text fontWeight="medium">{props.name}</Text>
-      <Text>—</Text>
-      <Text>{props.date.toLocaleDateString()}</Text>
-    </HStack>
-  );
-};
-
-interface IBlogTags {
-  tags: Array<string>;
-  marginTop?: SpaceProps['marginTop'];
-}
-
-const BlogTags = (props: IBlogTags) => {
-  const { marginTop = 0, tags } = props;
+const BlogTags: React.FC<BlogTagsProps> = (props) => {
+  const { tags } = props;
 
   return (
-    <HStack spacing={2} marginTop={marginTop}>
-      {tags.map((tag: any) => {
+    <HStack spacing="2">
+      {tags.map((tag: any, index: number) => {
         return (
-          <Tag size={'md'} variant="solid" colorScheme="orange" key={tag}>
-            {tag}
+          <Tag marginTop="3" size="md" variant="solid" colorScheme="orange" key={index}>
+            {tag.name}
           </Tag>
         );
       })}
@@ -70,10 +29,11 @@ interface BlogArticleItem {
   title: string;
   imageUrl: string;
   paragraphs: string[];
+  tags: any[];
 }
 
 const BlogArticleItem: React.FC<BlogArticleItem> = (props) => {
-  const { title, imageUrl, paragraphs } = props;
+  const { title, imageUrl, paragraphs, tags } = props;
 
   return (
     <WrapItem width={{ base: '100%', sm: '45%', md: '45%', lg: '30%' }}>
@@ -93,7 +53,7 @@ const BlogArticleItem: React.FC<BlogArticleItem> = (props) => {
             />
           </Box>
         </Box>
-        <BlogTags tags={['Engineering', 'Product']} marginTop={3} />
+        <BlogTags tags={tags} />
         <Heading fontSize="xl" marginTop="2">
           <Text textDecoration="none" _hover={{ textDecoration: 'none' }}>
             {title}
@@ -104,14 +64,41 @@ const BlogArticleItem: React.FC<BlogArticleItem> = (props) => {
             {paragraph}
           </Text>
         ))}
-        <BlogAuthor name="John Doe" date={new Date('2021-04-06T19:01:27Z')} />
       </Box>
     </WrapItem>
   );
 };
 
 const BlogArticles: React.FC = () => {
+  const [filterWord, setFilterWord] = useState<string[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState<number[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
+  const filterdBlogs = useMemo(() => {
+    console.log('memo');
+    return filterWord.length > 0
+      ? blogs.filter((blog) => {
+          const tagNames: string[] = blog.tags.map((tag: any) => tag.name);
+
+          return filterWord.every((filter: string) => tagNames.includes(filter));
+        })
+      : blogs;
+  }, [blogs, filterWord]);
+  const [tags, setTags] = useState<string[]>([]);
+
+  console.log('redrender BlogArticles');
+
+  const filterLabel = (tag: any, index: number) => {
+    const isSelected = selectedIndex.includes(index);
+
+    if (isSelected) {
+      setSelectedIndex(selectedIndex.filter((id) => id !== index));
+      setFilterWord(filterWord.filter((filter) => filter != tag.innerText));
+    } else {
+      setSelectedIndex([...selectedIndex, index]);
+      setFilterWord([...filterWord, tag.innerText]);
+    }
+  };
+
   const { response, loading, error } = useAxios({
     method: httpMethods.GET,
     url: `${constants.wordpressURL}/wp-json/wp/v2/posts`,
@@ -120,6 +107,30 @@ const BlogArticles: React.FC = () => {
     },
     body: null,
   });
+
+  const getAllTags = async () => {
+    try {
+      const response = await axios.get(`${constants.wordpressURL}/wp-json/wp/v2/tags`);
+      const tags = response.data;
+
+      return tags;
+    } catch (error) {
+      console.error('Error fetching tags:', error);
+      return [];
+    }
+  };
+
+  const getTagsByIds = async (tagIds: number[]) => {
+    try {
+      const response = await axios.get(`${constants.wordpressURL}/wp-json/wp/v2/tags?include=${tagIds.join(',')}`);
+      const tags = response.data;
+
+      return tags;
+    } catch (error) {
+      console.error('Error fetching tags:', error);
+      return [];
+    }
+  };
 
   const getImageUrlBasedOnHTML = (html: string): string => {
     const $ = cheerio.load(html);
@@ -141,17 +152,40 @@ const BlogArticles: React.FC = () => {
 
   useEffect(() => {
     if (response) {
-      const blogArticles = response.data.map((blog: any) => {
-        return {
-          title: blog.title.rendered,
-          imageUrl: getImageUrlBasedOnHTML(blog.content.rendered),
-          paragraphs: getParagraphsBasedOnHTML(blog.content.rendered),
-        };
-      });
+      const mapBlogArticles = () => {
+        return response.data.map((blog: any) => {
+          return {
+            id: blog.id,
+            title: blog.title.rendered,
+            imageUrl: getImageUrlBasedOnHTML(blog.content.rendered),
+            paragraphs: getParagraphsBasedOnHTML(blog.content.rendered),
+            tagIds: blog.tags,
+          };
+        });
+      };
 
-      setBlogs(blogArticles);
+      const fetchTags = async (blog: any) => {
+        const isEmptyTags: boolean = blog.tagIds.length === 0;
+        const tags = isEmptyTags ? [] : await getTagsByIds(blog.tagIds);
+
+        return {
+          ...blog,
+          tags: tags,
+        };
+      };
+
+      const processBlogArticles = async () => {
+        const mappedBlogArticles = mapBlogArticles();
+        const updatedBlogArticles = await Promise.all(mappedBlogArticles.map(fetchTags));
+        const tags = await getAllTags();
+
+        setTags(tags);
+        setBlogs(updatedBlogArticles);
+      };
+
+      processBlogArticles();
     }
-  }, [response]);
+  }, [response, selectedIndex, filterWord]);
 
   return (
     <Container maxW={'7xl'} p="12">
@@ -159,8 +193,23 @@ const BlogArticles: React.FC = () => {
         Các bài viết mới nhất
       </Heading>
       <Divider marginTop="5" />
+      <Center>
+        {tags.map((tag: any, index: number) => (
+          <Tag
+            onClick={(e: any) => filterLabel(e.target, index)}
+            my="3"
+            mr="3"
+            size="md"
+            variant="solid"
+            background={`${selectedIndex.includes(index) ? 'orange.600' : 'orange.400'}`}
+            key={index}
+          >
+            {tag.name}
+          </Tag>
+        ))}
+      </Center>
       <Wrap spacing="30px" marginTop="5">
-        {blogs.map((blog: any, index: number) => (
+        {filterdBlogs.map((blog: any, index: number) => (
           <BlogArticleItem key={index} {...blog} />
         ))}
       </Wrap>

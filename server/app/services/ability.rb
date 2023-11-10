@@ -6,7 +6,10 @@ class Ability
 
     current_user ||= User.new
     if current_user.superadmin?
-      can :manage, Bookmark
+      can :manage, [
+        User,
+        Product
+      ]
     elsif current_user.user?
       can :read, Bookmark
     end

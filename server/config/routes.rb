@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   mount Coverband::Reporters::Web.new, at: '/coverage'
 
+  mount ActionCable.server => '/cable'
+
   if Rails.env.development?
     mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
   end
@@ -11,9 +13,12 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :user, only: [:create]
+      resources :user, only: [:index, :create]
       resources :bookmarks, only: [:index, :show]
+
       resources :products, only: [:show], param: :slug
+      resources :products, only: [:create, :edit]
+
       resources :category, only: [:index]
 
       resources :categories do

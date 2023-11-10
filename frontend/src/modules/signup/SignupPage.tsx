@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Text,
@@ -13,53 +13,156 @@ import {
   useColorModeValue,
   Checkbox,
   Button,
+  FormErrorMessage,
 } from '@chakra-ui/react';
+import { Field, Formik } from 'formik';
 import Link from 'next/link';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import { constants } from '@/constants';
+import { setLocalStorageItem } from '@/shared/localStorageHelper';
 
-interface Props {}
+interface Account {
+  email: string;
+  password: string;
+  client_id: string;
+}
 
-const SignUpPage: React.FC<Props> = () => {
-  const verbose = () => {
-    alert('Hello World!');
+const SignUpPage: React.FC = () => {
+  const handleSubmitForm = async (values: any) => {
+    const account: Account = {
+      email: values.email,
+      password: values.password,
+      client_id: process.env.CLIENT_ID || '',
+    };
+
+    try {
+      const response = await axios.post(`${constants.baseURL}/api/v1/user`, account, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('response: ', response);
+      const user: any = response.data.user;
+
+      const accessToken: string = user.access_token;
+      console.log('accessToken: ', accessToken);
+      setLocalStorageItem('access_token', accessToken);
+
+      toast.success('Tạo tài khoảng thành công', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+
+      setInterval(() => {
+        window.location.href = '/collections/ca-phe';
+      }, 2000);
+    } catch (error: any) {
+      console.log('error: ', error);
+      toast.error(error.response.data.error[0], {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
   };
 
+  // useEffect(() => {}, []);
+
   return (
-    <Flex minH="100vh" align="center" justify="center" bg={useColorModeValue('gray.50', 'gray.800')}>
-      <Stack spacing={8} mx="auto" py={12} px={6}>
-        <Stack spacing={8} w="lg">
-          <Heading fontSize="4xl" textAlign="center">
-            Đăng ký
-          </Heading>
-        </Stack>
-        <Box rounded="lg" bg={useColorModeValue('white', 'gray.7000')} boxShadow="lg" p={8}>
-          <Stack spacing={4}>
-            <FormControl id="email" isRequired>
-              <FormLabel>Địa chỉ email</FormLabel>
-              <Input type="text" />
-            </FormControl>
-            <FormControl id="password" isRequired>
-              <FormLabel>Mật khẩu</FormLabel>
-              <Input type="password" />
-            </FormControl>
-            <FormControl id="confirm_password" isRequired>
-              <FormLabel>Xác nhận mật khẩu</FormLabel>
-              <Input type="password" />
-            </FormControl>
-            <Stack spacing={10}>
-              <Stack direction={{ base: 'column', sm: 'row' }} align="start" justify="space-between">
-                <Checkbox>Lưu thông tin</Checkbox>
-                <Link href="/forgot_password">
-                  <Text color="blue.400">Quên mật khẩu?</Text>
-                </Link>
-              </Stack>
-              <Button bg="blue.400" color="white" _hover={{ bg: 'blue.500' }}>
-                Đăng nhập
-              </Button>
-            </Stack>
+    <main>
+      <Flex minH="100vh" align="center" justify="center" bg={useColorModeValue('gray.50', 'gray.800')}>
+        <Stack spacing={8} mx="auto" py={12} px={6}>
+          <Stack spacing={8} w="lg">
+            <Heading fontSize="4xl" textAlign="center">
+              Đăng ký
+            </Heading>
           </Stack>
-        </Box>
-      </Stack>
-    </Flex>
+          <Box rounded="lg" bg={useColorModeValue('white', 'gray.7000')} boxShadow="lg" p={8}>
+            <Stack spacing={4}>
+              <Formik
+                initialValues={{
+                  email: '',
+                  password: '',
+                  confirm_password: '',
+                }}
+                onSubmit={handleSubmitForm}
+              >
+                {({ handleSubmit, errors, touched, getFieldProps }) => {
+                  const isInValidPassword: any = errors.password && touched.password;
+                  const isInValidConfirmPassword: any = errors.confirm_password && touched.confirm_password;
+
+                  return (
+                    <form onSubmit={handleSubmit}>
+                      <FormControl marginBottom="4" id="email" isRequired>
+                        <FormLabel htmlFor="email">Địa chỉ email</FormLabel>
+                        <Field as={Input} id="email" name="email" type="email" variant="filled" />
+                        <FormErrorMessage>{errors.email}</FormErrorMessage>
+                      </FormControl>
+                      <FormControl isInvalid={isInValidPassword} isRequired>
+                        <FormLabel>Mật khẩu</FormLabel>
+                        <Field
+                          as={Input}
+                          id="password"
+                          name="password"
+                          type="password"
+                          variant="filled"
+                          validate={(value: any) => {
+                            const isHasError: boolean = value.length < 6;
+
+                            return isHasError ? 'Password must be at least 6 characters' : undefined;
+                          }}
+                        />
+                        <FormErrorMessage>{errors.password}</FormErrorMessage>
+                      </FormControl>
+                      <FormControl isInvalid={isInValidConfirmPassword} isRequired>
+                        <FormLabel>Xác nhận mật khẩu</FormLabel>
+                        <Field
+                          as={Input}
+                          id="confirm_password"
+                          name="confirm_password"
+                          type="password"
+                          variant="filled"
+                          validate={(value: any) => {
+                            const isHasError: boolean = value !== getFieldProps('password').value;
+
+                            return isHasError ? 'Passwords do not match' : undefined;
+                          }}
+                        />
+                        <FormErrorMessage>{errors.confirm_password}</FormErrorMessage>
+                      </FormControl>
+                      <Stack spacing={10}>
+                        <Stack direction={{ base: 'column', sm: 'row' }} align="start" justify="space-between">
+                          <Checkbox>Lưu thông tin</Checkbox>
+                          <Link href="/forgot_password">
+                            <Text color="blue.400">Quên mật khẩu?</Text>
+                          </Link>
+                        </Stack>
+                        <Button type="submit" bg="blue.400" color="white" _hover={{ bg: 'blue.500' }}>
+                          Đăng ký
+                        </Button>
+                      </Stack>
+                    </form>
+                  );
+                }}
+              </Formik>
+            </Stack>
+          </Box>
+        </Stack>
+      </Flex>
+    </main>
   );
 };
 

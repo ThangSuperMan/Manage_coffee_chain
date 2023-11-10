@@ -21,6 +21,8 @@ module CoffeeChain
   class Application < Rails::Application
     config.load_defaults 6.1
 
+    config.hosts << "https://290d-171-252-189-0.ngrok-free.app"
+
     config.autoload_paths += %W(
       #{config.root}/lib
       #{config.root}/app/services

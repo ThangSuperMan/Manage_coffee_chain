@@ -8,6 +8,8 @@ import Product from '@/types/product';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import Link from 'next/link';
+import { httpMethods } from '@/constants';
+import ChatPopup from '@/components/ChatPopup';
 
 interface Props {}
 
@@ -71,7 +73,7 @@ const CollectionsContainer: React.FC = () => {
   const slug = pathname.split('/')[LAST_PATH_SEGMENT_INDEX];
   const [products, setProducts] = useState<Product[]>([]);
   const { response, loading, error } = useAxios({
-    method: 'GET',
+    method: httpMethods.GET,
     url: getUrlBasedOnLevelOfCategory(slug),
     headers: {
       'Content-Type': 'application/json',
@@ -128,19 +130,22 @@ const ProductsPage: React.FC<Props> = () => {
   };
 
   return (
-    <Box width="full" paddingLeft="72px" paddingRight="15px">
-      <Heading as="h3" display="inline-block" paddingLeft="15px" marginBottom="6" fontSize="2xl">
-        {currentActiveChildCategory}
-      </Heading>
-      <Flex width="full" flexWrap="wrap">
-        {loading && (
-          <Center width="100vh" height="80vh">
-            <Spinner thickness="4px" speed="0.8s" emptyColor="gray.200" color="blue.500" size="xl" />
-          </Center>
-        )}
-        {!loading && <CollectionsContainer />}
-      </Flex>
-    </Box>
+    <>
+      <Box width="full" paddingLeft="72px" paddingRight="15px">
+        <Heading as="h3" display="inline-block" paddingLeft="15px" marginBottom="6" fontSize="2xl">
+          {currentActiveChildCategory}
+        </Heading>
+        <Flex width="full" flexWrap="wrap">
+          {loading && (
+            <Center width="100vh" height="80vh">
+              <Spinner thickness="4px" speed="0.8s" emptyColor="gray.200" color="blue.500" size="xl" />
+            </Center>
+          )}
+          {!loading && <CollectionsContainer />}
+        </Flex>
+      </Box>
+      <ChatPopup />
+    </>
   );
 };
 

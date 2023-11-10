@@ -22,9 +22,12 @@ gem 'rollbar'
 gem 'rubocop', '~> 0.90.0', require: false # make sure .codeclimate.yml matches this
 gem 'rubocop-performance', '~> 1.8.1', require: false
 gem 'rubocop-rails', '~> 2.8.1', require: false
+gem 'rswag-api'
+gem 'rswag-ui'
 gem 'thread_safe'
 
 group :development, :test do
+  gem "rspec-rails"
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'pry-rails'
 end

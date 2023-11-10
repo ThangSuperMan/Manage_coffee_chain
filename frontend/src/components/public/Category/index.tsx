@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { addCurrentActiveChildCategory } from '@/redux/Features/ChildCategory/childCategorySlice';
+import { httpMethods } from '@/constants';
 
 interface Category {
   attributes: {
@@ -88,7 +89,7 @@ const CategoryLink: React.FC<CategoryLink> = (props) => {
 
 const Category: React.FC = () => {
   const { response, loading, error } = useAxios({
-    method: 'GET',
+    method: httpMethods.GET,
     url: '/api/v1/category',
     headers: {
       'Content-Type': 'application/json',

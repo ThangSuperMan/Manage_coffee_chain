@@ -10,7 +10,7 @@ module Api
                    elsif params[:category_id].present?
                      get_products_based_on_category_slug(params[:category_id])
                    else
-                      Product.all
+                     Product.all
                    end
 
         render json: products
@@ -18,7 +18,31 @@ module Api
 
       def show
         product = Product.find_by(slug: params[:slug])
+
         render json: product
+      end
+
+      def create
+        subcategory = Subcategory.find_by(slug: params[:subcategory_slug])
+
+        if subcategory
+          product = subcategory.products.create!(product_params)
+
+          render json: { product: product, message: 'Created product successfully.' }, status: 200
+        else
+          render json: { error: user.errors.full_messages }, status: 422
+        end
+      end
+
+      def edit
+        product = Product.update(product_params)
+        render json: { product: product, message: 'Edited product successfully.' }, status: 422
+      end
+
+      private
+
+      def product_params
+        params.permit(:name, :title, :meta_title, :slug, :price, :image_url, :start_at, :end_at)
       end
 
       def get_products_based_on_category_slug(category_slug)

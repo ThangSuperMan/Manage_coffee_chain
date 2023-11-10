@@ -1,6 +1,6 @@
 context('Home Page', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000');
+    cy.visit('http://localhost:4000');
   });
 
   describe('should render the home page', () => {

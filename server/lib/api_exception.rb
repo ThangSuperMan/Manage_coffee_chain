@@ -5,7 +5,7 @@ module ApiException
     "BadRequest" => { status: 400, message: 'Bad request' },
 
     #403
-    "Forbidden" => { status: 403, message: "Your own message in here" },
+    "CanCan::AccessDenied" => { status: 403, message: 'Access denied' },
 
     #404
     "ActiveRecord::RecordNotFound" => { status: 404, message: "Cannot find record" },

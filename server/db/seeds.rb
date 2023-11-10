@@ -9,6 +9,10 @@ if Bookmark.count.zero?
   Bookmark.create(title: 'Youtube', url: 'https://youube.com')
 end
 
+if User.count.zero?
+  User.create!(email: 'admin@gmail.com', password: 'admin123', role: 'superadmin')
+end
+
 if Category.count.zero?
   categories = [
     {
@@ -139,7 +143,6 @@ if Product.count.zero?
   # Highlight
   products = [
     {
-      id: 1,
       subcategory: subcategory_highlight,
       title: "Phin Sữa Tươi Bánh Flan",
       body: "Tỉnh tức thì cùng cà phê Robusta pha phin đậm đà và bánh flan núng nính. Uống là tỉnh, ăn là dính, xứng đáng là highlight trong ngày của bạn.",
@@ -152,7 +155,6 @@ if Product.count.zero?
       end_at: Time.now + 1.week,
     },
     {
-      id: 2,
       subcategory: subcategory_highlight,
       title: "Trà Xanh Espresso Marble",
       body: "Cho ngày thêm tươi, tỉnh, êm, mượt với Trà Xanh Espresso Marble. Đây là sự mai mối bất ngờ giữa trà xanh Tây Bắc vị mộc và cà phê Arabica Đà Lạt. Muốn ngày thêm chút highlight, nhớ tìm đến sự bất ngờ này bạn nhé!",
@@ -167,7 +169,6 @@ if Product.count.zero?
 
     # Coffee vietnam
     {
-      id: 3,
       subcategory: subcategory_vietnam,
       title: "Đường Đen Sữa Đá",
       body: "Nếu chuộng vị cà phê đậm đà, bùng nổ và thích vị đường đen ngọt thơm, Đường Đen Sữa Đá đích thị là thức uống dành cho bạn. Không chỉ giúp bạn tỉnh táo buổi sáng, Đường Đen Sữa Đá còn hấp dẫn đến ngụm cuối cùng bởi thạch cà phê giòn dai, nhai cực cuốn. - Khuấy đều trước khi sử dụng",
@@ -180,7 +181,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 4,
       subcategory: subcategory_vietnam,
       title: "The Coffee House Sữa Đá",
       body: "Thức uống giúp tỉnh táo tức thì để bắt đầu ngày mới thật hứng khởi. Không đắng khét như cà phê truyền thống, The Coffee House Sữa Đá mang hương vị hài hoà đầy lôi cuốn. Là sự đậm đà của 100% cà phê Arabica Cầu Đất rang vừa tới, biến tấu tinh tế với sữa đặc và kem sữa ngọt ngào cực quyến rũ. Càng hấp dẫn hơn với topping thạch 100% cà phê nguyên chất giúp giữ trọn vị ngon đến ngụm cuối cùng.",
@@ -193,7 +193,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 5,
       subcategory: subcategory_vietnam,
       title: "The Coffee House Sữa Đá",
       body: "Thức uống giúp tỉnh táo tức thì để bắt đầu ngày mới thật hứng khởi. Không đắng khét như cà phê truyền thống, The Coffee House Sữa Đá mang hương vị hài hoà đầy lôi cuốn. Là sự đậm đà của 100% cà phê Arabica Cầu Đất rang vừa tới, biến tấu tinh tế với sữa đặc và kem sữa ngọt ngào cực quyến rũ. Càng hấp dẫn hơn với topping thạch 100% cà phê nguyên chất giúp giữ trọn vị ngon đến ngụm cuối cùng.",
@@ -206,7 +205,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 6,
       subcategory: subcategory_vietnam,
       title: "Cà Phê Sữa Đá",
       body: "Cà phê Đắk Lắk nguyên chất được pha phin truyền thống kết hợp với sữa đặc tạo nên hương vị đậm đà, hài hòa giữa vị ngọt đầu lưỡi và vị đắng thanh thoát nơi hậu vị.",
@@ -219,7 +217,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 7,
       subcategory: subcategory_vietnam,
       title: "Cà Phê Sữa Nóng",
       body: "Cà phê được pha phin truyền thống kết hợp với sữa đặc tạo nên hương vị đậm đà, hài hòa giữa vị ngọt đầu lưỡi và vị đắng thanh thoát nơi hậu vị.",
@@ -232,7 +229,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 8,
       subcategory: subcategory_vietnam,
       title: "Bạc Sỉu",
       body: 'Bạc sỉu chính là "Ly sữa trắng kèm một chút cà phê". Thức uống này rất phù hợp những ai vừa muốn trải nghiệm chút vị đắng của cà phê vừa muốn thưởng thức vị ngọt béo ngậy từ sữa.',
@@ -245,7 +241,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 9,
       subcategory: subcategory_vietnam,
       title: "Bạc Sữa Nóng",
       body: 'Bạc sỉu chính là "Ly sữa trắng kèm một chút cà phê". Thức uống này rất phù hợp những ai vừa muốn trải nghiệm chút vị đắng của cà phê vừa muốn thưởng thức vị ngọt béo ngậy từ sữa.',
@@ -258,7 +253,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 10,
       subcategory: subcategory_vietnam,
       title: "Đường Đen Marble Latte",
       body: 'Đường Đen Marble Latte êm dịu cực hấp dẫn bởi vị cà phê đắng nhẹ hoà quyện cùng vị đường đen ngọt thơm và sữa tươi béo mịn. Sự kết hợp đầy mới mẻ của cà phê và đường đen cũng tạo nên diện mạo phân tầng đẹp mắt. Đây là lựa chọn đáng thử để bạn khởi đầu ngày mới đầy hứng khởi. - Khuấy đều trước khi sử dụng',
@@ -271,7 +265,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 11,
       subcategory: subcategory_vietnam,
       title: "Caramel Macchiato Đá",
       body: 'Khuấy đều trước khi sử dụng Caramel Macchiato sẽ mang đến một sự ngạc nhiên thú vị khi vị thơm béo của bọt sữa, sữa tươi, vị đắng thanh thoát của cà phê Espresso hảo hạng và vị ngọt đậm của sốt caramel được gói gọn trong một tách cà phê.',
@@ -284,7 +277,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 12,
       subcategory: subcategory_vietnam,
       title: "Caramel Macchiato Đá",
       body: 'Khuấy đều trước khi sử dụng Caramel Macchiato sẽ mang đến một sự ngạc nhiên thú vị khi vị thơm béo của bọt sữa, sữa tươi, vị đắng thanh thoát của cà phê Espresso hảo hạng và vị ngọt đậm của sốt caramel được gói gọn trong một tách cà phê.',
@@ -297,7 +289,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 13,
       subcategory: subcategory_vietnam,
       title: "Caramel Macchiato Nóng",
       body: 'Caramel Macchiato sẽ mang đến một sự ngạc nhiên thú vị khi vị thơm béo của bọt sữa, sữa tươi, vị đắng thanh thoát của cà phê Espresso hảo hạng và vị ngọt đậm của sốt caramel được gói gọn trong một tách cà phê.',
@@ -312,7 +303,6 @@ if Product.count.zero?
 
     # Tea
     {
-      id: 14,
       subcategory: subcategory_tra_trai_cay,
       title: "Trà Long Nhãn Hạt Sen",
       body: 'Thức uống mang hương vị của nhãn, của sen, của trà Oolong đầy thanh mát cho tất cả các thành viên trong dịp Tết này. An lành, thư thái và đậm đà chính là những gì The Coffee House mong muốn gửi trao đến bạn và gia đình.',
@@ -325,7 +315,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 15,
       subcategory: subcategory_tra_trai_cay,
       title: "Trà Đào Cam Sả Đá",
       body: 'Vị thanh ngọt của đào, vị chua dịu của Cam Vàng nguyên vỏ, vị chát của trà đen tươi được ủ mới mỗi 4 tiếng, cùng hương thơm nồng đặc trưng của sả chính là điểm sáng làm nên sức hấp dẫn của thức uống này.',
@@ -338,7 +327,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 16,
       subcategory: subcategory_tra_trai_cay,
       title: "Trà Đào Cam Sả Nóng",
       body: 'Vị thanh ngọt của đào, vị chua dịu của Cam Vàng nguyên vỏ, vị chát của trà đen tươi được ủ mới mỗi 4 tiếng, cùng hương thơm nồng đặc trưng của sả chính là điểm sáng làm nên sức hấp dẫn của thức uống này.',
@@ -351,7 +339,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 17,
       subcategory: subcategory_tra_trai_cay,
       title: "Trà Hạt Sen Đá",
       body: 'Nền trà oolong hảo hạng kết hợp cùng hạt sen tươi, bùi bùi và lớp foam cheese béo ngậy. Trà hạt sen là thức uống thanh mát, nhẹ nhàng phù hợp cho cả buổi sáng và chiều tối.',
@@ -364,7 +351,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 18,
       subcategory: subcategory_tra_trai_cay,
       title: "Trà Hạt Sen Nóng",
       body: 'Nền trà oolong hảo hạng kết hợp cùng hạt sen tươi, bùi bùi thơm ngon. Trà hạt sen là thức uống thanh mát, nhẹ nhàng phù hợp cho cả buổi sáng và chiều tối.',
@@ -377,7 +363,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 19,
       subcategory: subcategory_tra_trai_cay,
       title: "Trà Đào Cam Sả Chai Fresh 500ML",
       body: 'Với phiên bản chai fresh 500ml, thức uống "best seller" đỉnh cao mang một diện mạo tươi mới, tiện lợi, phù hợp với bình thường mới và vẫn giữ nguyên vị thanh ngọt của đào, vị chua dịu của cam vàng nguyên vỏ và vị trà đen thơm lừng ly Trà đào cam sả nguyên bản. *Sản phẩm dùng ngon nhất trong ngày. *Sản phẩm mặc định mức đường và không đá.',
@@ -390,7 +375,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 20,
       subcategory: subcategory_tra_sua_macchiato,
       title: "Trà sữa Oolong Nướng Trân Châu",
       body: 'Hương vị chân ái đúng gu đậm đà với trà oolong được “sao” (nướng) lâu hơn cho hương vị đậm đà, hòa quyện với sữa thơm béo mang đến cảm giác mát lạnh, lưu luyến vị trà sữa đậm đà nơi vòm họng.',
@@ -403,7 +387,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 21,
       subcategory: subcategory_tra_sua_macchiato,
       title: "Trà sữa Oolong Nướng (Nóng)",
       body: 'Đậm đà chuẩn gu và ấm nóng - bởi lớp trà oolong nướng đậm vị hoà cùng lớp sữa thơm béo. Hương vị chân ái đúng gu đậm đà - trà oolong được "sao" (nướng) lâu hơn cho vị đậm đà, hoà quyện với sữa thơm ngậy. Cho từng ngụm ấm áp, lưu luyến vị trà sữa đậm đà mãi nơi cuống họng.',
@@ -416,7 +399,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 22,
       subcategory: subcategory_tra_sua_macchiato,
       title: "Trà Sữa Mắc Ca Trân Châu",
       body: 'Mỗi ngày với The Coffee House sẽ là điều tươi mới hơn với sữa hạt mắc ca thơm ngon, bổ dưỡng quyện cùng nền trà oolong cho vị cân bằng, ngọt dịu đi kèm cùng Trân châu trắng giòn dai mang lại cảm giác “đã” trong từng ngụm trà sữa.',
@@ -431,7 +413,6 @@ if Product.count.zero?
 
     # Hi-Teach Healthy 
     {
-      id: 23,
       subcategory: subcategory_hi_tea_tra,
       title: "Hi Tea Đào Kombucha",
       body: 'Trà hoa Hibiscus 0% caffeine chua nhẹ, kết hợp cùng trà lên men Kombucha hoàn toàn tự nhiên và Đào thanh mát tạo nên Hi-Tea Đào Kombucha chua ngọt cực cuốn. Đặc biệt Kombucha Detox giàu axit hữu cơ, Đào nhiều chất xơ giúp thanh lọc cơ thể và hỗ trợ giảm cân hiệu quả. Lưu ý: Khuấy đều trước khi dùng',
@@ -444,7 +425,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 24,
       subcategory: subcategory_hi_tea_tra,
       title: "Hi Tea Yuzu Kombucha",
       body: 'Trà hoa Hibiscus 0% caffeine thanh mát, hòa quyện cùng trà lên men Kombucha 100% tự nhiên và mứt Yuzu Marmalade (quýt Nhật) mang đến hương vị chua chua lạ miệng. Đặc biệt, Hi-Tea Yuzu Kombucha cực hợp cho team thích detox, muốn sáng da nhờ Kombucha Detox nhiều chất chống oxy hoá cùng Yuzu giàu vitamin C. Lưu ý: Khuấy đều trước khi dùng',
@@ -457,7 +437,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 25,
       subcategory: subcategory_hi_tea_tra,
       title: "Hi Tea Phúc Bồn Tử Mandarin",
       body: 'Nền trà Hibiscus thanh mát, quyện vị chua chua ngọt ngọt của phúc bồn tử 100% tự nhiên cùng quýt mọng nước mang đến cảm giác sảng khoái tức thì.',
@@ -472,7 +451,6 @@ if Product.count.zero?
 
     # hi-tea-healthy Da tuyet
     {
-      id: 26,
       subcategory: subcategory_hi_tea_da_tuyet,
       title: "Hi Tea Đá Tuyết Yuzu Vải",
       body: 'Vị trà hoa Hibiscus chua chua, kết hợp cùng đá tuyết Yuzu mát lạnh tái tê, thêm miếng vải căng mọng, ngọt ngào sẽ khiến bạn thích thú ngay từ lần thử đầu tiên.',
@@ -485,10 +463,8 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
 
-
     # Banh man
     {
-      id: 27,
       subcategory: subcategory_banh_man,
       title: "Bánh Mì Gậy Gà Kim Quất",
       body: 'Phiên bản nâng cấp với trọng lượng tăng 80% so với bánh mì que thông thường, đem đến cho bạn bữa ăn nhanh gọn mà vẫn đầy đủ dinh dưỡng. Cắn một miếng là mê mẩn bởi vỏ bánh nướng giòn rụm, nhân đậm vị với từng miếng thịt gà mềm, ướp sốt kim quất chua ngọt, thơm nức đặc trưng. Càng "đúng bài" hơn khi thưởng thức kèm Cà phê đượm vị hoặc trà Hi-Tea thanh mát.',
@@ -501,7 +477,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 28,
       subcategory: subcategory_banh_man,
       title: "Bánh Mì Gậy Cá Ngừ Mayo",
       body: 'Trọng lượng tăng 70% so với bánh mì que thông thường, thêm nhiều dinh dưỡng, thích hợp cho cả bữa ăn nhẹ lẫn ăn no. Ngon hết chỗ chê từ vỏ bánh nướng nóng giòn, cá ngừ đậm đà quyện lẫn sốt mayo thơm béo đến từng hạt bắp ngọt bùi hấp dẫn. Nhâm nhi bánh cùng ly Cà phê thơm nồng hay Hi-Tea tươi mát thì đúng chuẩn "điểm mười".',
@@ -514,7 +489,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 29,
       subcategory: subcategory_banh_man,
       title: "Bánh Mì Que Pate",
       body: 'Trọng lượng tăng 70% so với bánh mì que thông thường, thêm nhiều dinh dưỡng, thích hợp cho cả bữa ăn nhẹ lẫn ăn no. Ngon hết chỗ chê từ vỏ bánh nướng nóng giòn, cá ngừ đậm đà quyện lẫn sốt mayo thơm béo đến từng hạt bắp ngọt bùi hấp dẫn. Nhâm nhi bánh cùng ly Cà phê thơm nồng hay Hi-Tea tươi mát thì đúng chuẩn "Vỏ bánh mì giòn tan, kết hợp với lớp nhân pate béo béo đậm đà sẽ là lựa chọn lý tưởng nhẹ nhàng để lấp đầy chiếc bụng đói , cho 1 bữa sáng - trưa - chiều - tối của bạn thêm phần thú vị".',
@@ -529,7 +503,6 @@ if Product.count.zero?
 
     # Banh ngot
     {
-      id: 30,
       subcategory: subcategory_banh_ngot,
       title: "Mochi Kem Phúc Bồn Tử",
       body: 'Bao bọc bởi lớp vỏ Mochi dẻo thơm, bên trong là lớp kem lạnh cùng nhân phúc bồn tử ngọt ngào. Gọi 1 chiếc Mochi cho ngày thật tươi mát. Sản phẩm phải bảo quán mát và dùng ngon nhất trong 2h sau khi nhận hàng.',
@@ -542,7 +515,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 31,
       subcategory: subcategory_banh_ngot,
       title: "Mochi Kem Việt Quất",
       body: 'Bao bọc bởi lớp vỏ Mochi dẻo thơm, bên trong là lớp kem lạnh cùng nhân việt quất đặc trưng thơm thơm, ngọt dịu. Gọi 1 chiếc Mochi cho ngày thật tươi mát. Sản phẩm phải bảo quán mát và dùng ngon nhất trong 2h sau khi nhận hàng.',
@@ -555,7 +527,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 32,
       subcategory: subcategory_banh_ngot,
       title: "Mochi Kem Dừa Dứa",
       body: 'Bao bọc bởi lớp vỏ Mochi dẻo thơm, bên trong là lớp kem lạnh cùng nhân dừa dứa thơm lừng lạ miệng. Gọi 1 chiếc Mochi cho ngày thật tươi mát. Sản phẩm phải bảo quán mát và dùng ngon nhất trong 2h sau khi nhận hàng.',
@@ -570,7 +541,6 @@ if Product.count.zero?
 
     # Snack
     {
-      id: 33,
       subcategory: subcategory_snack,
       title: "Mít Sấy",
       body: 'Mít sấy khô vàng ươm, giòn rụm, giữ nguyên được vị ngọt lịm của mít tươi.',
@@ -583,7 +553,6 @@ if Product.count.zero?
       end_at: Time.now + 2.weeks,
     },
     {
-      id: 34,
       subcategory: subcategory_snack,
       title: "Gà Xé Lá Chanh",
       body: 'Thịt gà được xé tơi, mang hương vị mặn, ngọt, cay cay quyện nhau vừa chuẩn, thêm chút thơm thơm thơm từ lá chanh sấy khô giòn giòn xua tan ngay cơn buồn miệng.',
