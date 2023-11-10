@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { Suspense } from 'react';
 import { getClient } from '@/lib/client';
 import { gql } from '@apollo/client';
 import CarouselBanner from '@/components/public/CarouselBanner';
@@ -21,7 +23,7 @@ const query = gql`
 `;
 
 export default async function Home() {
-  const { data, loading } = await getClient().query({ query });
+  // const { data, loading } = await getClient().query({ query });
   // useEffect(() => {
   //   fetch('https://jsonplaceholder.typicode.com/posts')
   //     .then((res) => res.json())
@@ -44,9 +46,17 @@ export default async function Home() {
   // );
 
   return (
-    <main>
-      <CarouselBanner />
-      <TestimonialContainer />
-    </main>
+    <Suspense>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `if(window.location.pathname === '/') { window.location.replace('http://localhost:3000/redirected') }`,
+        }}
+      ></script>
+      <style dangerouslySetInnerHTML={{ __html: `body { color: #676 }` }}></style>
+      <main>
+        <CarouselBanner />
+        <TestimonialContainer />
+      </main>
+    </Suspense>
   );
 }

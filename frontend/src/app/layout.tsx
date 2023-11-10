@@ -28,6 +28,7 @@ const RootLayout: React.FC<Props> = ({ children }) => {
   const isProductsPage: boolean = pathname.includes('/collections');
   const isAdminPage: boolean = pathname.includes('/admin');
   const isHomePage: boolean = pathname.includes('/');
+  console.log('pathname: ', pathname);
 
   //   <ChakraProvider>
   //   {isApplyCommonLayout ? (

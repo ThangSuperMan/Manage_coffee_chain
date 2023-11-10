@@ -58,7 +58,7 @@ const CategoryLink: React.FC<CategoryLink> = (props) => {
   };
 
   return (
-    <li style={{ listStyle: 'none' }}>
+    <li style={{ listStyle: 'none' }} className="category">
       <Link onClick={handleExpandChildCategories} href={`/collections/${slug}`}>
         <Text fontSize="sm" color={isActive ? 'primary' : 'gray.600'} fontWeight={isActive ? 'bold' : undefined}>
           {name}

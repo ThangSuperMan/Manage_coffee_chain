@@ -45,18 +45,25 @@ const ProductItem: React.FC<ProductItemProps> = (props) => {
   const { title, price, image_url, slug } = props.product;
 
   return (
-    <Box width="33.33%" paddingX="15px" paddingBottom="10">
+    <Box width="33.33%" paddingX="15px" paddingBottom="10" className="product">
       <Link href={`/products/${slug}`}>
         <Image borderRadius="xl" boxShadow="lg" objectFit="cover" src={image_url} alt="logo" />
       </Link>
       <Box paddingTop="4">
         <Link href={`/products/${slug}`}>
-          <Heading as="h3" display="inline-block" fontWeight="bold" fontSize="medium" marginBottom="1">
+          <Heading
+            as="h3"
+            display="inline-block"
+            fontWeight="bold"
+            fontSize="medium"
+            marginBottom="1"
+            className="product-title"
+          >
             {title}
           </Heading>
         </Link>
         <Flex marginBottom="10px">
-          <Text fontSize="sm" color="gray.500">
+          <Text fontSize="sm" color="gray.500" className="product-price">
             {price}
           </Text>
           <Text fontSize="sm" color="gray.500">

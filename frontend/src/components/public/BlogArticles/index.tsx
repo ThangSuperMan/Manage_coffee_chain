@@ -16,7 +16,7 @@ const BlogTags: React.FC<BlogTagsProps> = (props) => {
     <HStack spacing="2">
       {tags.map((tag: any, index: number) => {
         return (
-          <Tag marginTop="3" size="md" variant="solid" colorScheme="orange" key={index}>
+          <Tag marginTop="3" size="md" variant="solid" colorScheme="orange" className="blog-article-tag" key={index}>
             {tag.name}
           </Tag>
         );
@@ -36,7 +36,7 @@ const BlogArticleItem: React.FC<BlogArticleItem> = (props) => {
   const { title, imageUrl, paragraphs, tags } = props;
 
   return (
-    <WrapItem width={{ base: '100%', sm: '45%', md: '45%', lg: '30%' }}>
+    <WrapItem width={{ base: '100%', sm: '45%', md: '45%', lg: '30%' }} className="blog-article">
       <Box w="100%">
         <Box borderRadius="lg" overflow="hidden">
           <Box textDecoration="none" _hover={{ textDecoration: 'none' }}>
@@ -74,7 +74,6 @@ const BlogArticles: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState<number[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
   const filterdBlogs = useMemo(() => {
-    console.log('memo');
     return filterWord.length > 0
       ? blogs.filter((blog) => {
           const tagNames: string[] = blog.tags.map((tag: any) => tag.name);
@@ -84,8 +83,6 @@ const BlogArticles: React.FC = () => {
       : blogs;
   }, [blogs, filterWord]);
   const [tags, setTags] = useState<string[]>([]);
-
-  console.log('redrender BlogArticles');
 
   const filterLabel = (tag: any, index: number) => {
     const isSelected = selectedIndex.includes(index);
@@ -201,8 +198,9 @@ const BlogArticles: React.FC = () => {
             mr="3"
             size="md"
             variant="solid"
-            background={`${selectedIndex.includes(index) ? 'orange.600' : 'orange.400'}`}
+            background={`${selectedIndex.includes(index) ? 'blue.400' : 'orange.400'}`}
             key={index}
+            data-testid="tag"
           >
             {tag.name}
           </Tag>
