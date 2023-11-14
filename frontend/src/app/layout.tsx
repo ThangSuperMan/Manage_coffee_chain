@@ -2,20 +2,21 @@
 
 import React from 'react';
 import Providers from '@/redux/provider';
-import { Center, ChakraProvider, Flex, extendTheme } from '@chakra-ui/react';
+import { Box, Center, ChakraProvider, Flex, extendTheme } from '@chakra-ui/react';
 import UserLayout from '@/common/layouts/user';
 import 'react-quill/dist/quill.snow.css';
 import Category from '@/components/public/Category';
 import { usePathname } from 'next/navigation';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Layout from '@/modules/common/Layout';
+import Sidebar from '@/components/Sidebar';
 
 const theme = extendTheme({
   colors: {
     primary: '#EA8025',
   },
 });
+const HOME_PAGE_ROUTE_LENGTH = 2;
 
 interface Props {
   children: React.ReactNode;
@@ -24,21 +25,11 @@ interface Props {
 const RootLayout: React.FC<Props> = ({ children }) => {
   const pathname = usePathname();
   const pathsToCheck = ['/signin', '/signup'];
-  const isApplyCommonLayout: boolean = pathsToCheck.some((path: string) => pathname.includes(path));
+  const isSignUpOrSigInPage: boolean = pathsToCheck.some((path: string) => pathname.includes(path));
   const isProductsPage: boolean = pathname.includes('/collections');
+  const isDetailProductPage: boolean = pathname.includes('products');
   const isAdminPage: boolean = pathname.includes('/admin');
-  const isHomePage: boolean = pathname.includes('/');
-  console.log('pathname: ', pathname);
-
-  //   <ChakraProvider>
-  //   {isApplyCommonLayout ? (
-  //     <Providers>{children}</Providers>
-  //   ) : (
-  //     <Providers>
-  //       <Layout>{children}</Layout>
-  //     </Providers>
-  //   )}
-  // </ChakraProvider>
+  const isHomePage: boolean = pathname.split('/').length === HOME_PAGE_ROUTE_LENGTH;
 
   return (
     <html lang="en">
@@ -59,16 +50,22 @@ const RootLayout: React.FC<Props> = ({ children }) => {
               </UserLayout>
             </Providers>
           )}
+          {isDetailProductPage && (
+            <Providers>
+              <UserLayout>{children}</UserLayout>
+            </Providers>
+          )}
           {isHomePage && (
             <Providers>
               <UserLayout>{children}</UserLayout>
             </Providers>
           )}
-          {isAdminPage ? (
+          {isAdminPage && (
             <Providers>
               <UserLayout>{children}</UserLayout>
             </Providers>
-          ) : undefined}
+          )}
+          {isSignUpOrSigInPage && <Providers>{children}</Providers>}
           <ToastContainer />
         </ChakraProvider>
       </body>

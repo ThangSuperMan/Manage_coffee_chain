@@ -11,6 +11,7 @@ end
 
 if User.count.zero?
   User.create!(email: 'admin@gmail.com', password: 'admin123', role: 'superadmin')
+  User.create!(email: 'thangdevops@gmail.com', password: 'thang123', role: 'user')
 end
 
 if Category.count.zero?

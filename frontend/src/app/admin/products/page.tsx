@@ -1,54 +1,38 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, Heading, Table, Thead, Tbody, Tr, Th, Td, Button, Input } from '@chakra-ui/react';
+import { Box, Button, Heading, VStack, Text, Image, Flex, IconButton, FormControl, FormLabel, Input, Textarea, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
-const ManageProductsPage: React.FC = () => {
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: 'Product 1',
-      image: 'https://example.com/product1.jpg',
-      price: 10.99,
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    },
-    {
-      id: 2,
-      name: 'Product 2',
-      image: 'https://example.com/product2.jpg',
-      price: 19.99,
-      description: 'Nulla facilisi. Sed euismod lectus id tellus tincidunt.',
-    },
-    {
-      id: 3,
-      name: 'Product 3',
-      image: 'https://example.com/product3.jpg',
-      price: 5.99,
-      description: 'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.',
-    },
-  ]);
-  const [newProduct, setNewProduct] = useState({
-    name: '',
-    image: null,
-  });
+const ProductPage = () => {
+  const [products, setProducts] = useState([]);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [editIndex, setEditIndex] = useState(-1);
 
-  const handleNameChange = (e) => {
-    setNewProduct({ ...newProduct, name: e.target.value });
-  };
-
-  const handleImageDrop = (e) => {
+  const handleAddProduct = (e) => {
     e.preventDefault();
-    const imageFile = e.dataTransfer.files[0];
-    setNewProduct({ ...newProduct, image: imageFile });
+    if (editIndex !== -1) {
+      const updatedProducts = [...products];
+      updatedProducts[editIndex] = { name, description, imageUrl };
+      setProducts(updatedProducts);
+      setEditIndex(-1);
+    } else {
+      const newProduct = { name, description, imageUrl };
+      setProducts([...products, newProduct]);
+    }
+    setName('');
+    setDescription('');
+    setImageUrl('');
   };
 
-  const handleImageDragOver = (e) => {
-    e.preventDefault();
-  };
-
-  const handleCreateProduct = () => {
-    setProducts([...products, newProduct]);
-    setNewProduct({ name: '', image: null });
+  const handleEditProduct = (index) => {
+    const productToEdit = products[index];
+    setName(productToEdit.name);
+    setDescription(productToEdit.description);
+    setImageUrl(productToEdit.imageUrl);
+    setEditIndex(index);
   };
 
   const handleDeleteProduct = (index) => {
@@ -57,64 +41,96 @@ const ManageProductsPage: React.FC = () => {
     setProducts(updatedProducts);
   };
 
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      setImageUrl(event.target.result);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   return (
     <Box p={4}>
-      <Heading>Manage Products</Heading>
-      <Table variant="simple" mt={4}>
-        <Thead>
-          <Tr>
-            <Th>Name</Th>
-            <Th>Image</Th>
-            <Th>Action</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {products.map((product, index) => (
-            <Tr key={index}>
-              <Td>{product.name}</Td>
-              <Td>
-                {product.image ? (
-                  <img
-                    src={URL.createObjectURL(product.image)}
-                    alt="Product"
-                    style={{ width: '50px', height: '50px' }}
-                  />
+      <Heading as="h1" mb={4}>Product Page</Heading>
+      <form onSubmit={handleAddProduct}>
+        <VStack align="start" spacing={4}>
+          <Box borderWidth="1px" borderRadius="md" p={4} boxShadow="md">
+            <Heading as="h2" size="md">{editIndex !== -1 ? 'Edit Product' : 'Add Product'}</Heading>
+            <FormControl mt={4}>
+              <FormLabel htmlFor="name">Tên sản phẩm</FormLabel>
+              <Input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel htmlFor="description">Mô tả</FormLabel>
+              <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel htmlFor="image">Hình ảnh</FormLabel>
+              <div
+                id="image"
+                onDrop={handleDrop}
+                onDragOver={(e) => e.preventDefault()}
+                style={{ border: '1px dashed gray', padding: '1rem' }}
+              >
+                {imageUrl ? (
+                  <img src={imageUrl} alt="Product" style={{ maxWidth: '100%', maxHeight: '200px' }} />
                 ) : (
-                  'No Image'
+                  <Text>Kéo và thả hình ảnh vào đây</Text>
                 )}
-              </Td>
-              <Td>
-                <Button colorScheme="red" size="sm" onClick={() => handleDeleteProduct(index)}>
-                  Delete
-                </Button>
-              </Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
-      <Box mt={4}>
-        <label htmlFor="name">Product Name:</label>
-        <Input type="text" id="name" value={newProduct.name} onChange={handleNameChange} />
-      </Box>
-      <Box
-        width="200px"
-        height="200px"
-        border="1px solid black"
-        mt={4}
-        onDrop={handleImageDrop}
-        onDragOver={handleImageDragOver}
-      >
-        {newProduct.image ? (
-          <img src={URL.createObjectURL(newProduct.image)} alt="Product" style={{ width: '100%', height: '100%' }} />
-        ) : (
-          <p>Drag and drop an image here</p>
-        )}
-      </Box>
-      <Button mt={4} colorScheme="blue" onClick={handleCreateProduct}>
-        Create Product
-      </Button>
+              </div>
+            </FormControl>
+            <Button mt={4} colorScheme="teal" type="submit">
+              {editIndex !== -1 ? 'Cập nhật' : 'Thêm'}
+            </Button>
+          </Box>
+          <Box borderWidth="1px" borderRadius="md" p={4} boxShadow="md" w="100%">
+            <Table variant="simple">
+              <Thead>
+                <Tr>
+                  <Th>Tên sản phẩm</Th>
+                  <Th>Mô tả</Th>
+                  <Th>Hình ảnh</Th>
+                  <Th></Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {products.map((product, index) => (
+                  <Tr key={index}>
+                    <Td>{product.name}</Td>
+                    <Td>{product.description}</Td>
+                    <Td>
+                      <Image src={product.imageUrl} alt="Product" maxH="100px" maxW="100px" />
+                    </Td>
+                    <Td>
+                      <Flex>
+                        <IconButton
+                          icon={<EditIcon />}
+                          colorScheme="teal"
+                          variant="ghost"
+                          onClick={() => handleEditProduct(index)}
+                          mr={2}
+                        />
+                        <IconButton
+                          icon={<DeleteIcon />}
+                          colorScheme="red"
+                          variant="ghost"
+                          onClick={() => handleDeleteProduct(index)}
+                        />
+                      </Flex>
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </Box>
+        </VStack>
+      </form>
     </Box>
   );
 };
 
-export default ManageProductsPage;
+export default ProductPage;

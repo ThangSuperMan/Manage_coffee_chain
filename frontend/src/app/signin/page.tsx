@@ -14,30 +14,51 @@ import {
   Checkbox,
   Button,
   FormErrorMessage,
-  useAccordionContext,
 } from '@chakra-ui/react';
 import { Field, Formik, useFormik } from 'formik';
 import Link from 'next/link';
-import { toast } from 'react-toastify';
-import useAxios from '@/hooks/useAxios';
-import { httpMethods } from '@/constants';
+import { constants } from '@/constants';
+import axios from 'axios';
+import { setLocalStorageItem } from '@/shared/localStorageHelper';
+import { notifySuccess, notififyError } from '@/shared/toastNotificationHelper';
 
-interface Account {
+interface EssentialCredentials {
+  grant_type: string;
   email: string;
   password: string;
+  client_id: string;
+  client_secret: string;
 }
 
 const SignInPage: React.FC = () => {
-  const { response, loading, error } = useAxios({
-    method: httpMethods.GET,
-    url: '/api/v1/',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: null,
-  });
+  const handleSubmitForm = async (values: any) => {
+    console.log('handleSubmitForm');
+    const essentialSignInCredentials: EssentialCredentials = {
+      grant_type: 'password',
+      email: values.email,
+      password: values.password,
+      client_id: process.env.CLIENT_ID || '',
+      client_secret: process.env.CLIENT_SECRET || '',
+    };
+    console.log('essentialSignInCredentials: ', essentialSignInCredentials);
 
-  const handleSubmitForm = (values: Account) => {};
+    try {
+      const response = await axios.post(`${constants.baseURL}/oauth/token`, essentialSignInCredentials, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('response: ', response);
+      const accessToken = response.data.access_token;
+      setLocalStorageItem('access_token', accessToken);
+
+      notifySuccess('Đăng nhập thành công');
+    } catch (error: any) {
+      const toastMessage: string = error.response.data.error[0];
+      notififyError(toastMessage);
+    }
+  };
 
   return (
     <main>
@@ -58,9 +79,6 @@ const SignInPage: React.FC = () => {
                 onSubmit={handleSubmitForm}
               >
                 {({ handleSubmit, errors, touched }) => {
-                  console.log('handleSubmit: ', handleSubmit);
-                  console.log('errors: ', errors);
-                  console.log('touched: ', touched);
                   const isInValidPassword: boolean = errors.password ? true : false;
 
                   return (

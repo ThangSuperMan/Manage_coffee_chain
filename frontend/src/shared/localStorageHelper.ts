@@ -1,6 +1,5 @@
 export const getLocalStorageItem = (key: string) => {
-  const data = localStorage.getItem(key) || null;
-  return data;
+  return localStorage.getItem(key);
 };
 
 export const setLocalStorageItem = (key: string, data: any) => {
@@ -8,5 +7,5 @@ export const setLocalStorageItem = (key: string, data: any) => {
 };
 
 export const clearaLocalStorageItem = () => {
-  localStorage.clear
+  localStorage.clear;
 };

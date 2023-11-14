@@ -19,6 +19,8 @@ Rails.application.routes.draw do
       resources :products, only: [:show], param: :slug
       resources :products, only: [:create, :edit]
 
+      resources :orders, only: [:index, :create, :update, :destroy]
+
       resources :category, only: [:index]
 
       resources :categories do

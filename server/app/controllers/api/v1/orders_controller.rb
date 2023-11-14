@@ -1,20 +1,27 @@
 module Api
   module V1
-    class OrdersController < ApplicationController
+    class OrdersController < Common::BaseController
+      load_and_authorize_resource
+
+      def index
+        orders = Order.all
+
+        render json: orders
+      end
+
       def create
-        order = Order.new(order_params)
-        if order.save
-          render json: { message: 'Order created successfully' }, status: :created
-        else
-          render json: { error: order.errors.full_messages }, status: :unprocessable_entity
-        end
+        user = User.find_by(email: params[:email])
+        order = user.orders.create!(order_params)
+
+        render json: order
       end
 
       def update
+        # binding.pry
         order = Order.find(params[:id])
         order.update(order_params)
 
-        render json: { message: 'Order updated successfully' }, status: :ok
+        render json: { message: 'Đơn hàng cập nhật thành công', order: order }, status: :ok
       end
 
       def destroy
@@ -27,7 +34,7 @@ module Api
       private
 
       def order_params
-        params.require(:order).permit(:user_id, :product_id, :quantity, :cashier_name, :status)
+        params.require(:order).permit(:product_id, :email, :quantity, :cashier_name, :status)
       end
     end
   end

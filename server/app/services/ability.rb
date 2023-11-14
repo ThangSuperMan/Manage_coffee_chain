@@ -8,7 +8,8 @@ class Ability
     if current_user.superadmin?
       can :manage, [
         User,
-        Product
+        Product,
+        Order
       ]
     elsif current_user.user?
       can :read, Bookmark
@@ -17,7 +18,7 @@ class Ability
 
   def allow_anonymous_actions
     can :read, [
-      Product,
+      Product
     ]
 
     can :create, User do |user|

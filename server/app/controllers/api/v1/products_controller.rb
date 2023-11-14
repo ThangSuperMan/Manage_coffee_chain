@@ -28,7 +28,7 @@ module Api
         if subcategory
           product = subcategory.products.create!(product_params)
 
-          render json: { product: product, message: 'Created product successfully.' }, status: 200
+          render json: product
         else
           render json: { error: user.errors.full_messages }, status: 422
         end

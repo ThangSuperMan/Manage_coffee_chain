@@ -17,16 +17,11 @@ import {
 } from '@chakra-ui/react';
 import { Field, Formik } from 'formik';
 import Link from 'next/link';
-import { toast } from 'react-toastify';
 import axios from 'axios';
 import { constants } from '@/constants';
 import { setLocalStorageItem } from '@/shared/localStorageHelper';
-
-interface Account {
-  email: string;
-  password: string;
-  client_id: string;
-}
+import Account from '@/types/account';
+import { notifySuccess, notififyError } from '@/shared/toastNotificationHelper';
 
 const SignUpPage: React.FC = () => {
   const handleSubmitForm = async (values: any) => {
@@ -50,36 +45,17 @@ const SignUpPage: React.FC = () => {
       console.log('accessToken: ', accessToken);
       setLocalStorageItem('access_token', accessToken);
 
-      toast.success('Tạo tài khoảng thành công', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      });
+      const toastMessage: string = 'Tạo tài khoảng thành công';
+      notifySuccess(toastMessage);
 
       setInterval(() => {
         window.location.href = '/collections/ca-phe';
       }, 2000);
     } catch (error: any) {
-      console.log('error: ', error);
-      toast.error(error.response.data.error[0], {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      });
+      const toastMessage: string = error.response.data.error[0];
+      notififyError(toastMessage);
     }
   };
-
-  // useEffect(() => {}, []);
 
   return (
     <main>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Flex,
@@ -28,27 +28,47 @@ import {
   AlertDialogHeader,
   AlertDialogBody,
   AlertDialogFooter,
+  Tag,
+  Select,
 } from '@chakra-ui/react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { constants, httpMethods } from '@/constants';
 import { toast } from 'react-toastify';
-
-const orders = [
-  { id: 1, customer: 'John Doe', product: 'Product A', quantity: 2, status: 'pending' },
-  { id: 2, customer: 'Jane Smith', product: 'Product B', quantity: 3, status: 'pending' },
-  // Add more orders as needed
-];
+import { getLocalStorageItem } from '@/shared/localStorageHelper';
+import axios from 'axios';
+import { notififyError, notifySuccess } from '@/shared/toastNotificationHelper';
+import { Order } from '@/types/order';
+import useAxios from '@/hooks/useAxios';
+import { OrderStatus } from '@/types/orderStatus';
 
 interface CreateOrderPopupProps {
   isCreatingOrder: boolean;
   setIsCreatingOrder: (value: boolean) => void;
-  newOrder: {
-    customer: string;
-    product: string;
-    quantity: number;
-  };
-  setNewOrder: (value: { customer: string; product: string; quantity: number; cashier_name: string }) => void;
+  newOrder: Order;
+  setNewOrder: (value: Order) => void;
   handleCreateOrder: () => void;
 }
+
+interface OrderStatusDropdown {
+  selectedStatus: number;
+  onChange: (value: number) => void;
+}
+
+const OrderStatusDropdown = ({ selectedStatus, onChange }: OrderStatusDropdown) => {
+  const handleStatusChange = (event: any) => {
+    console.log('handleStatusChange');
+    const selectedValue = parseInt(event.target.value); // Convert the value to a number
+    onChange(selectedValue);
+  };
+
+  return (
+    <Select value={selectedStatus} onChange={handleStatusChange}>
+      <option value={0}>Pending</option>
+      <option value={1}>Completed</option>
+      <option value={2}>Returned</option>
+    </Select>
+  );
+};
 
 const CreateOrderPopup: React.FC<CreateOrderPopupProps> = ({
   isCreatingOrder,
@@ -61,116 +81,188 @@ const CreateOrderPopup: React.FC<CreateOrderPopupProps> = ({
     <Modal isOpen={isCreatingOrder} onClose={() => setIsCreatingOrder(false)}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Tạo đơn hàng mới</ModalHeader>
-        <ModalBody>
-          <FormControl>
-            <FormLabel>Khách hàng</FormLabel>
-            <Input
-              placeholder="Nhập tên khách hàng"
-              value={newOrder.customer}
-              onChange={(e) => setNewOrder({ ...newOrder, customer: e.target.value })}
-            />
-          </FormControl>
-          <FormControl mt={4}>
-            <FormLabel>Mã sản phẩm</FormLabel>
-            <Input
-              placeholder="Nhập mã sản phẩm"
-              value={newOrder.product}
-              onChange={(e) => setNewOrder({ ...newOrder, product: e.target.value })}
-            />
-          </FormControl>
-          <FormControl mt={4}>
-            <FormLabel>Nhập tên nhân viên</FormLabel>
-            <Input
-              placeholder="Nhập tên nhân viên đảm nhiệm"
-              value={newOrder.product}
-              onChange={(e) => setNewOrder({ ...newOrder, cashier_name: e.target.value })}
-            />
-          </FormControl>
-          <FormControl mt={4}>
-            <FormLabel>Số lượng</FormLabel>
-            <Input
-              type="number"
-              placeholder="Nhập số lượng"
-              value={newOrder.quantity}
-              onChange={(e) => setNewOrder({ ...newOrder, quantity: parseInt(e.target.value) })}
-            />
-          </FormControl>
-        </ModalBody>
-        <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleCreateOrder}>
-            Tạo đơn hàng
-          </Button>
-          <Button onClick={() => setIsCreatingOrder(false)}>Thoát</Button>
-        </ModalFooter>
+        <form>
+          <ModalHeader>Tạo đơn hàng mới</ModalHeader>
+          <ModalBody>
+            <FormControl>
+              <FormLabel>Mã sản phẩm</FormLabel>
+              <Input
+                placeholder="Mã sản phẩm"
+                value={newOrder.product_id}
+                type="number"
+                onChange={(e) => setNewOrder({ ...newOrder, product_id: parseInt(e.target.value) })}
+              />
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Khách hàng</FormLabel>
+              <Input
+                placeholder="Nhập email khách hàng"
+                value={newOrder.email}
+                onChange={(e) => setNewOrder({ ...newOrder, email: e.target.value })}
+              />
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Nhập tên nhân viên</FormLabel>
+              <Input
+                placeholder="Nhập tên nhân viên đảm nhiệm"
+                value={newOrder.cashier_name}
+                onChange={(e) => setNewOrder({ ...newOrder, cashier_name: e.target.value })}
+              />
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Số lượng</FormLabel>
+              <Input
+                type="number"
+                placeholder="Nhập số lượng"
+                value={newOrder.quantity}
+                onChange={(e) => setNewOrder({ ...newOrder, quantity: parseInt(e.target.value) })}
+              />
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={handleCreateOrder}>
+              Tạo đơn hàng
+            </Button>
+            <Button type="submit" onClick={() => setIsCreatingOrder(false)}>
+              Thoát
+            </Button>
+          </ModalFooter>
+        </form>
       </ModalContent>
     </Modal>
   );
 };
 
 const AdminOrder = () => {
+  const [orders, setOrders] = useState<Order[]>([]);
   const [isCreatingOrUpdateOrder, setIsCreatingOrUpdateOrder] = useState<boolean>(false);
   const [isUpdatingOrder, setIsUpdatingOrder] = useState<boolean>(false);
-  const [newOrder, setNewOrder] = useState({ customer: '', product: '', quantity: '', cashier_name: '' });
+  const [currentEditingOrder, setCurrentEditingOrder] = useState<Order>({});
+  const [currentDeletingOrder, setCurrentDeletingOrder] = useState<Order>({});
+  const [selectedIndexStatus, setSelectedIndexStatus] = useState<number>(0);
+  const [newOrder, setNewOrder] = useState<Order>({});
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState<boolean>(false);
-  const [productToDelete, setProductToDelete] = useState(null);
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
+  const { response, loading, error } = useAxios({
+    method: httpMethods.GET,
+    url: `${constants.baseURL}/api/v1/orders`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getLocalStorageItem('access_token')}`,
+    },
+    body: null,
+  });
 
-  const handleCreateOrder = () => {
-    // Perform the necessary logic to create the new order
-    console.log(newOrder);
-    // Reset the form fields
-    setNewOrder({
-      customer: '',
-      product: '',
-      quantity: 0,
-    });
+  const handleStatusChange = (selectedIndex: number) => {
+    console.log('handleStatusChange');
+    console.log('selectedIndex: ', selectedIndex);
+    setCurrentEditingOrder((prev) => ({ ...prev, status: selectedIndex }));
+    setSelectedIndexStatus(selectedIndex);
+  };
+
+  const handleCreateOrder = async () => {
+    try {
+      const response: any = await axios.post(`${constants.baseURL}/api/v1/orders`, newOrder, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getLocalStorageItem('access_token')}`,
+        },
+      });
+
+      notifySuccess('Tạo đơn hàng thành công');
+    } catch (error: any) {
+      console.log('error: ', error);
+      notififyError('Tạo đơn hàng thất bại');
+    }
+
     // Close the popup
     setIsCreatingOrder(false);
   };
 
-  const handleEditOrder = (orderId) => {
+  const loadOrderNeedToBeModified = (orderId: any) => orders.find((order) => order.id === orderId);
+
+  const handleEditOrder = (orderId: any) => {
+    const order = loadOrderNeedToBeModified(orderId);
+    if (order) {
+      setCurrentEditingOrder(order);
+    }
+
     setIsUpdatingOrder(true);
   };
 
-  const handleDeleteOrder = (orderId) => {
-    console.log('handleDeleteOrder');
+  const handleDeleteOrder = (orderId: any) => {
+    const order = loadOrderNeedToBeModified(orderId);
+    if (order) {
+      setCurrentDeletingOrder(order);
+    }
+
     setIsDeleteConfirmationOpen(true);
   };
 
-  const handleUpdateOrder = () => {
-    setIsUpdatingOrder(false);
-    setNewOrder({ customer: '', product: '', quantity: '' });
-    toast.success('🦄 cập nhật thành công!', {
-      position: 'top-right',
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-    });
+  const handleUpdateOrder = async () => {
+    console.log('currentEditingOrder: ', currentEditingOrder);
+    try {
+      const response = await axios.put(
+        `${constants.baseURL}/api/v1/orders/${currentEditingOrder.id}`,
+        currentEditingOrder,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${getLocalStorageItem('access_token')}`,
+          },
+        },
+      );
+
+      setIsUpdatingOrder(false);
+      console.log('response: ', response);
+      notifySuccess(response.data.message);
+    } catch (error: any) {
+      notififyError('🦄 cập nhật thất bại!');
+    }
   };
 
   const handleConfirmDelete = () => {
-    toast.success('🦄 Xoá sản phẩm thành công!', {
-      position: 'top-right',
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-    });
+    try {
+      const response = axios.delete(`${constants.baseURL}/api/v1/orders/${currentDeletingOrder.id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getLocalStorageItem('access_token')}`,
+        },
+      });
+
+      notifySuccess('Xóa đơn hàng thành công!');
+    } catch (error: any) {
+      console.log('error: ', error);
+      notififyError('Xóa đơn hàng thất bại!');
+    }
+
     setIsDeleteConfirmationOpen(false);
   };
 
   const handleCancelDelete = () => {
     setIsDeleteConfirmationOpen(false);
-    setProductToDelete(null);
   };
+
+  useEffect(() => {
+    if (response) {
+      console.log('response: ', response);
+      console.log('currentEditingOrder: ', currentEditingOrder);
+      console.log('selectedIndexStatus: ', selectedIndexStatus);
+      const ordersData: any[] = [];
+      response.data.data.forEach((order: any) => {
+        const orderData: Order = {
+          id: order.id,
+          product_id: order.attributes.product_id,
+          quantity: order.attributes.quantity,
+          cashier_name: order.attributes.cashier_name,
+          status: OrderStatus[order.attributes.status] || order.attributes.status,
+          email: order.relationships.user.data,
+        };
+        ordersData.push(orderData);
+      });
+      setOrders(ordersData);
+    }
+  }, [response, currentEditingOrder, selectedIndexStatus]);
 
   return (
     <main>
@@ -179,7 +271,7 @@ const AdminOrder = () => {
           <Heading size="lg">Quán lý đơn hàng</Heading>
         </Flex>
         <Button colorScheme="blue" onClick={() => setIsCreatingOrder(true)}>
-          Create New Order
+          Tạo mới đơn hàng
         </Button>
         <CreateOrderPopup
           isCreatingOrder={isCreatingOrder}
@@ -192,8 +284,9 @@ const AdminOrder = () => {
           <Thead>
             <Tr>
               <Th>Mã ID</Th>
-              <Th>Tên khách hàng</Th>
-              <Th>Sản phẩm</Th>
+              <Th>Email khách hàng</Th>
+              <Th>Mã Sản phẩm</Th>
+              <Th>Nhân viên phụ trách</Th>
               <Th>Số lượng</Th>
               <Th>Trạng thái</Th>
               <Th>Hành động</Th>
@@ -203,13 +296,18 @@ const AdminOrder = () => {
             {orders.map((order) => (
               <Tr key={order.id}>
                 <Td>{order.id}</Td>
-                <Td>{order.customer}</Td>
-                <Td>{order.product}</Td>
+                <Td>{order.email}</Td>
+                <Td>{order.product_id}</Td>
+                <Td>{order.cashier_name}</Td>
                 <Td>{order.quantity}</Td>
-                <Td>{order.status}</Td>
+                <Td>
+                  <Tag size="md" variant="solid" colorScheme="blue">
+                    {order.status}
+                  </Tag>
+                </Td>
                 <Td>
                   <IconButton
-                    onClick={handleEditOrder}
+                    onClick={() => handleEditOrder(order.id)}
                     icon={<FaEdit />}
                     colorScheme="blue"
                     variant="ghost"
@@ -217,7 +315,7 @@ const AdminOrder = () => {
                     aria-label="Edit"
                   />
                   <IconButton
-                    onClick={handleDeleteOrder}
+                    onClick={() => handleDeleteOrder(order.id)}
                     icon={<FaTrash />}
                     colorScheme="red"
                     variant="ghost"
@@ -237,27 +335,23 @@ const AdminOrder = () => {
             <FormControl>
               <FormLabel>Khách hàng</FormLabel>
               <Input
-                placeholder="Nhập tên khách hàng"
-                value={newOrder.customer}
-                onChange={(e) => setNewOrder({ ...newOrder, customer: e.target.value })}
+                placeholder="Nhập email khách hàng"
+                value={currentEditingOrder.email}
+                onChange={(e) => setNewOrder({ ...newOrder, email: e.target.value })}
               />
             </FormControl>
             <FormControl mt={4}>
-              <FormLabel>Product</FormLabel>
-              <Input
-                placeholder="Nhập tên sản phẩm"
-                value={newOrder.product}
-                onChange={(e) => setNewOrder({ ...newOrder, product: e.target.value })}
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Quantity</FormLabel>
+              <FormLabel>Số lượng</FormLabel>
               <Input
                 type="number"
                 placeholder="Nhập số lượng"
-                value={newOrder.quantity}
-                onChange={(e) => setNewOrder({ ...newOrder, quantity: e.target.value })}
+                value={currentEditingOrder.quantity}
+                onChange={(e) => setNewOrder({ ...newOrder, quantity: parseInt(e.target.value) })}
               />
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Trạng thái</FormLabel>
+              <OrderStatusDropdown selectedStatus={selectedIndexStatus} onChange={handleStatusChange} />
             </FormControl>
           </ModalBody>
           <ModalFooter>

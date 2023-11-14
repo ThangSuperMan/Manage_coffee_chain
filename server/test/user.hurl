@@ -1,8 +1,8 @@
 # Sign up
 POST http://localhost:3000/api/v1/user
 {
-  "email": "thangsudo@gmail.com",
-  "password": "Thang123",
+  "email": "admin@gmail.com",
+  "password": "admin123",
   "client_id": "coffee_website"
 }
 
@@ -15,7 +15,7 @@ POST http://localhost:3000/oauth/token
   "email": "admin@gmail.com",
   "password": "admin123",
   "client_id": "coffee_website",
-  "client_secret": "x4daDlpb0kRbcWjMjgmc2pnwfgt1DMNRKj13B_8RWyc"
+  "client_secret": "3k19AubxEJRACrZ9RWGrkFKO3aDikSQiuKtjIpbtsJQ"
 }
 
 HTTP 200
@@ -25,7 +25,7 @@ access_token: jsonpath "$['access_token']"
 [Asserts]
 header "Content-Type" == "application/json; charset=utf-8"
 
-# Create a new product based on admin role
+# Create a new product based on admin role with jwt token
 
 POST http://localhost:3000/api/v1/products?subcategory_slug=snack
 Authorization: Bearer 4fpuM8OPDjYEoCNNMhJFYaDTu77ovZ7B8BWMAjV8Mxk
@@ -39,9 +39,5 @@ Authorization: Bearer 4fpuM8OPDjYEoCNNMhJFYaDTu77ovZ7B8BWMAjV8Mxk
   "start_at": "2023-11-05T10:00:00",
   "end_at": "2023-11-12T10:00:00"
 }
-
-HTTP 200
-
-GET http://localhost:3000/api/v1/user?email=thang@gmail.com
 
 HTTP 200
