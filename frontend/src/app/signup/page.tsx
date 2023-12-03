@@ -1,7 +1,7 @@
 'use client';
 
-import SignUpPage from '@/modules/signup/SignupPage';
 import React from 'react';
+import SignUpPage from '@/modules/signup/SignupPage';
 
 const AdminSignUp: React.FC = () => {
   return (

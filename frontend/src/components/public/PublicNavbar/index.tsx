@@ -264,6 +264,10 @@ const NAV_ITEMS: Array<NavItem> = [
     label: 'Học pha chế',
     href: '#',
   },
+  {
+    label: 'Danh sách sản phẩm yêu thích',
+    href: '/wishlist',
+  },
 ];
 
 export default PublicNavbar;

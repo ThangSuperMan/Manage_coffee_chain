@@ -9,14 +9,14 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import Link from 'next/link';
 import ChatPopup from '@/components/ChatPopup';
-import { FaHeart } from 'react-icons/fa';
+import { FaHeart, FaTrash } from 'react-icons/fa';
 import axios from 'axios';
 import { httpMethods } from '@/constants';
 import { constants } from '@/constants';
 import { getLocalStorageItem } from '@/shared/localStorageHelper';
 import { notififyError, notifySuccess } from '@/shared/toastNotificationHelper';
 
-interface Props {}
+const ProductFavorites: React.FC = () => {};
 
 const LAST_PATH_SEGMENT_INDEX = 2;
 const categories: { name?: string; slug: string }[] = [
@@ -56,6 +56,25 @@ const ProductItem: React.FC<ProductItemProps> = (props) => {
   const { title, price, image_url, slug } = props.product;
   const isFavorite: boolean = false;
 
+  const handleRemoveFromFavorites = async () => {
+    console.log('handleRemoveFromFavorites ');
+    try {
+      const response = await axios.delete(`${constants.baseURL}/api/v1/favorite_products/${slug}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getLocalStorageItem('access_token')}`,
+        },
+      });
+
+      console.log('response: ', response);
+      // const user: any = response.data.user;
+
+      notifySuccess(response.data.message);
+    } catch (error: any) {
+      console.log('error :>> ', error);
+    }
+  };
+
   const handleAddToFavorites = async (e: any) => {
     console.log('handleAddToFavorites');
     try {
@@ -65,7 +84,7 @@ const ProductItem: React.FC<ProductItemProps> = (props) => {
         },
       };
 
-      const response = await axios.post(`${constants.baseURL}/api/v1/favorite_products`, productFavorite, {
+      const response = await axios.get(`${constants.baseURL}/api/v1/favorite_products`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${getLocalStorageItem('access_token')}`,
@@ -79,8 +98,6 @@ const ProductItem: React.FC<ProductItemProps> = (props) => {
       notifySuccess(toastMessage);
     } catch (error: any) {
       console.log('error :>> ', error);
-      // const toastMessage: string = error.response.data.error[0];
-      // notififyError(toastMessage);
     }
   };
 
@@ -95,8 +112,8 @@ const ProductItem: React.FC<ProductItemProps> = (props) => {
           top="2"
           right="2"
           aria-label="Add to favorites"
-          icon={<FaHeart color={isFavorite ? 'red' : 'gray'} />}
-          onClick={handleAddToFavorites}
+          icon={<FaTrash color={isFavorite ? 'red' : 'gray'} />}
+          onClick={handleRemoveFromFavorites}
           ml="2"
           size="sm"
         />
@@ -133,27 +150,21 @@ const CollectionsContainer: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const { response, loading, error } = useAxios({
     method: httpMethods.GET,
-    url: getUrlBasedOnLevelOfCategory(slug),
+    url: `${constants.baseURL}/api/v1/favorite_products`,
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${getLocalStorageItem('access_token')}`,
     },
     body: null,
   });
 
-  function getUrlBasedOnLevelOfCategory(slug: string) {
-    const isParentCategory: boolean = categories.some((category: any) => category.slug === slug);
-    if (!isParentCategory && slug === 'all') {
-      return '/api/v1/products';
-    }
-
-    return isParentCategory ? `/api/v1/categories/${slug}/products` : `/api/v1/subcategories/${slug}/products`;
-  }
-
   useEffect(() => {
     if (response) {
+      console.log('response: ', response);
       const products = response.data?.data;
       setProducts(products);
     }
+    console.log('products: ', products);
   }, [response, products]);
 
   return products?.map((item: any, index: number) => {
@@ -162,50 +173,20 @@ const CollectionsContainer: React.FC = () => {
   });
 };
 
-const ProductsPage: React.FC<Props> = () => {
-  const currentActiveChildCategory = useSelector((state: RootState) => state.childCategory.value);
-  const pathname = usePathname();
-  const slug = pathname.split('/')[LAST_PATH_SEGMENT_INDEX];
-  const { response, loading, error } = useAxios({
-    method: 'GET',
-    url: `/api/v1/categories/${slug}/products`,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: null,
-  });
-
-  const getCategoryNameBasedOnSlug = (slug: string): string => {
-    categories.forEach((category: any) => {
-      if (category.slug === slug) {
-        const result = category.name;
-
-        return result;
-      }
-    });
-
-    const firstCategory = categories[0].slug;
-    return firstCategory;
-  };
-
+const Wishlist: React.FC = () => {
   return (
     <>
       <Box width="full" paddingLeft="72px" paddingRight="15px">
-        <Heading as="h3" display="inline-block" paddingLeft="15px" marginBottom="6" fontSize="2xl">
-          {currentActiveChildCategory}
+        <Heading my="8" as="h1">
+          Danh sách yêu thích
         </Heading>
         <Flex width="full" flexWrap="wrap">
-          {loading && (
-            <Center width="100vh" height="80vh">
-              <Spinner thickness="4px" speed="0.8s" emptyColor="gray.200" color="blue.500" size="xl" />
-            </Center>
-          )}
-          {!loading && <CollectionsContainer />}
+          <CollectionsContainer />
         </Flex>
+        <ChatPopup />
       </Box>
-      <ChatPopup />
     </>
   );
 };
 
-export default ProductsPage;
+export default Wishlist;
