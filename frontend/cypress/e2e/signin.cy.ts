@@ -1,6 +1,6 @@
 context('Sign in', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:4000/signin');
+    cy.visit('/signin');
     cy.wait(3000);
   });
 
