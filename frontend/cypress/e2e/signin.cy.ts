@@ -4,7 +4,7 @@ context('Sign in', () => {
     cy.wait(3000);
   });
 
-  describe('E2E GUI', () => {
+  describe('Test GUI', () => {
     it('ensure login interface is responsive on mobile device', () => {
       cy.viewport('iphone-6+');
 
@@ -22,7 +22,7 @@ context('Sign in', () => {
     });
   });
 
-  describe('E2E Function', () => {
+  describe('Test Function', () => {
     it('should sign in successfully', () => {
       cy.get('#email').type('thangdevops@gmail.com');
       cy.wait(3000);
