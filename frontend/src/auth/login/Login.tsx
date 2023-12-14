@@ -54,9 +54,13 @@ const Login: React.FC = () => {
       setLocalStorageItem('access_token', accessToken);
 
       notifySuccess('Đăng nhập thành công');
+
+      setTimeout(() => {
+        window.location.href = '/collections/ca-phe';
+      }, 2000);
     } catch (error: any) {
       const toastMessage: string = error.response.data.error[0];
-      notififyError(toastMessage);
+      notififyError('Đăng nhập không thành công');
     }
   };
 
@@ -98,14 +102,14 @@ const Login: React.FC = () => {
                         validate={(value: any) => {
                           const isHasError: boolean = value.length < 6;
 
-                          return isHasError ? 'Password must be at least 6 characters' : undefined;
+                          return isHasError ? 'Mật khẩu phải có ít nhất 6 ký tự' : undefined;
                         }}
                       />
                       <FormErrorMessage>{errors.password}</FormErrorMessage>
                     </FormControl>
                     <Stack spacing={10}>
                       <Stack direction={{ base: 'column', sm: 'row' }} align="start" justify="space-between">
-                        <Checkbox>Lưu thông tin</Checkbox>
+                        <Checkbox id="checkbox">Lưu thông tin</Checkbox>
                         <Link href="/forgot_password">
                           <Text color="blue.400">Quên mật khẩu?</Text>
                         </Link>

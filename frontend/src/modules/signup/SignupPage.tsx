@@ -98,7 +98,7 @@ const SignUpPage: React.FC = () => {
                           validate={(value: any) => {
                             const isHasError: boolean = value.length < 6;
 
-                            return isHasError ? 'Password must be at least 6 characters' : undefined;
+                            return isHasError ? 'Mật khẩu phải có ít nhất 6 ký tự' : undefined;
                           }}
                         />
                         <FormErrorMessage>{errors.password}</FormErrorMessage>
@@ -114,7 +114,7 @@ const SignUpPage: React.FC = () => {
                           validate={(value: any) => {
                             const isHasError: boolean = value !== getFieldProps('password').value;
 
-                            return isHasError ? 'Passwords do not match' : undefined;
+                            return isHasError ? 'Mật khẩu không giống nhau' : undefined;
                           }}
                         />
                         <FormErrorMessage>{errors.confirm_password}</FormErrorMessage>
