@@ -1,9 +1,29 @@
 context('Sign in', () => {
-  describe('Test GUI', () => {
-    it('should sign in successfully', () => {
-      cy.visit('http://localhost:4000/signin');
-      cy.wait(3000);
+  beforeEach(() => {
+    cy.visit('http://localhost:4000/signin');
+    cy.wait(3000);
+  });
 
+  describe('E2E GUI', () => {
+    it('ensure login interface is responsive on mobile device', () => {
+      cy.viewport('iphone-6+');
+
+      cy.get('#email').should('be.visible');
+      cy.get('#password').should('be.visible');
+      cy.get('button[type="submit"]').eq(0).should('be.visible');
+    });
+
+    it('ensure login interface is responsive on tablet devices', () => {
+      cy.viewport('ipad-2');
+
+      cy.get('#email').should('be.visible');
+      cy.get('#password').should('be.visible');
+      cy.get('button[type="submit"]').eq(0).should('be.visible');
+    });
+  });
+
+  describe('E2E Function', () => {
+    it('should sign in successfully', () => {
       cy.get('#email').type('thangdevops@gmail.com');
       cy.wait(3000);
 
@@ -17,12 +37,6 @@ context('Sign in', () => {
     });
 
     it('should display notification error message correctly when sign in unsuccessfully', () => {
-      cy.visit('http://localhost:4000/signin');
-      cy.wait(3000);
-
-      cy.visit('http://localhost:4000/signin');
-      cy.wait(3000);
-
       cy.get('#email').type('thangdevops@gmail.com');
       cy.wait(3000);
 
@@ -36,9 +50,6 @@ context('Sign in', () => {
     });
 
     it('should display the inline error message correctly when the password less than 6 characters', () => {
-      cy.visit('http://localhost:4000/signin');
-      cy.wait(3000);
-
       cy.get('#email').type('thangdevops@gmail.com');
       cy.wait(3000);
 
