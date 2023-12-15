@@ -9,13 +9,13 @@ context('Category - Sidebar component', () => {
     let categoryLink: any;
 
     it('should highlight category with correct color when click on a category', () => {
-      const chakraActivePrimaryHighlightColor: string = 'css-13lp4jc';
+      const chakraActivePrimaryHighlightColorClassName: string = 'css-13lp4jc';
 
       categoryLink = cy.get('a[href="/collections/banh"] > p');
       categoryLink.click();
       cy.wait(3000);
 
-      categoryLink.should('have.class', chakraActivePrimaryHighlightColor);
+      categoryLink.should('have.class', chakraActivePrimaryHighlightColorClassName);
     });
 
     it('should display enough child categories when click on a category', () => {
@@ -34,9 +34,5 @@ context('Category - Sidebar component', () => {
         cy.wrap($li).should('be.visible');
       });
     });
-  });
-
-  describe('E2E Function', () => {
-    describe('validate password', () => {});
   });
 });
