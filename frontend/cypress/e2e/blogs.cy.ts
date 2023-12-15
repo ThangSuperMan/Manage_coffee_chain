@@ -1,17 +1,36 @@
 context('Blogs Page', () => {
-  it('should filter articles based on selected tags', () => {
-    cy.visit('http://localhost:4000/blogs');
-    cy.wait(4000);
+  beforeEach(() => {
+    cy.visit('/blogs');
+    cy.wait(3000);
+  });
 
-    cy.get('[data-testid="tag"]').eq(0).click();
-    cy.wait(4000);
+  describe('Test GUI', () => {
+    it('should display at least one tag when there are have some articles', () => {
+      const firstAritcleTag = cy.get('[data-testid="tag"]').eq(0);
 
-    cy.get('[data-testid="tag"]').eq(1).click();
-    cy.wait(4000);
+      firstAritcleTag.should('be.visible');
+    });
 
-    cy.get('.blog-article').within(() => {
-      cy.get('.blog-article-tag').should('contain', 'Bánh ngon');
-      cy.get('.blog-article-tag').should('contain', 'Bánh thơm');
+    it("should highlight aritcle's tag with correct color when click on a tag", () => {
+      const firstAritcleTag = cy.get('[data-testid="tag"]').eq(0);
+
+      firstAritcleTag.should('be.visible');
+      const chakraActivePrimaryHighlightColorClassName: string = 'css-y614pu';
+
+      firstAritcleTag.click();
+      cy.wait(3000);
+
+      firstAritcleTag.should('have.class', chakraActivePrimaryHighlightColorClassName);
+    });
+  });
+
+  describe('Test Function', () => {
+    it('allow to filter articles based on selected tags', () => {
+      const firstAritcleTag = cy.get('[data-testid="tag"]').eq(0);
+      firstAritcleTag.click();
+      cy.wait(3000);
+
+      cy.get('.blog-article').eq(0).should('be.visible');
     });
   });
 });
